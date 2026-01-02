@@ -1,1 +1,1232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>JLPT Engine v48 (Final Architecture)</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@600&family=Noto+Sans+JP:wght@400;500;700&family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script type="module" src="https://code4fukui.github.io/kaki-jun/kaki-jun.js"></script>
 
+    <style>
+        /* CSS 변수 시스템 */
+        :root { 
+            --primary: #2563eb; --primary-light: #eff6ff; --primary-dark: #1d4ed8; 
+            --text-main: #0f172a; --text-sub: #334155; 
+            --bg-body: #f8fafc; --bg-card: #ffffff; --bg-meta: #f1f5f9; 
+            --correct: #16a34a; --wrong: #dc2626; 
+            --header-h: 60px; --nav-h: 70px;
+            --radius-card: 20px; --radius-btn: 14px; 
+            --ease-sys: cubic-bezier(0.2, 0.0, 0.2, 1); 
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #60a5fa; --primary-light: #1e293b; --primary-dark: #3b82f6;
+                --text-main: #f1f5f9; --text-sub: #94a3b8;
+                --bg-body: #0f172a; --bg-card: #1e293b; --bg-meta: #334155;
+                --correct: #4ade80; --wrong: #f87171;
+            }
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Pretendard', 'Noto Sans JP', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-body); color: var(--text-main); margin: 0; 
+            padding-top: calc(var(--header-h) + 16px); 
+            padding-bottom: calc(var(--nav-h) + 24px); 
+            overscroll-behavior-y: none;
+            transition: background-color 0.3s;
+        }
+
+        .container { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+        .icon { font-family: 'Material Symbols Rounded'; font-size: 24px; vertical-align: middle; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+        /* 헤더 스타일 */
+        .fixed-header { position: fixed; top: 0; left: 0; width: 100%; height: var(--header-h); background: var(--bg-card); opacity: 0.98; backdrop-filter: blur(8px); border-bottom: 1px solid var(--bg-meta); z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; transition: transform 0.3s var(--ease-sys); }
+        .btn-icon { background: transparent; border: none; padding: 12px; margin-left: -12px; cursor: pointer; color: var(--text-sub); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+        .header-title { font-weight: 800; font-size: 1.1rem; color: var(--primary); letter-spacing: -0.5px; }
+        
+        .score-container { display: flex; flex-direction: column; align-items: flex-end; }
+        .score-text { font-size: 0.85rem; font-weight: 700; color: var(--text-main); font-feature-settings: "tnum"; }
+        .score-track { width: 80px; height: 6px; background: var(--bg-meta); border-radius: 3px; margin-top: 4px; overflow: hidden; }
+        .score-bar { height: 100%; background: var(--correct); width: 0%; transition: width 0.5s var(--ease-sys); }
+        .progress-line { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--bg-meta); }
+        .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.3s var(--ease-sys); }
+
+        /* 문제 카드 */
+        .quiz-card { background: var(--bg-card); border-radius: var(--radius-card); border: 1px solid var(--bg-meta); margin-bottom: 24px; overflow: hidden; }
+        .card-meta { background: var(--bg-meta); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bg-meta); }
+        .meta-left { display: flex; align-items: center; gap: 8px; }
+        .q-badge { background: var(--primary); color: #fff; padding: 4px 10px; border-radius: 8px; font-size: 0.9rem; font-weight: 800; }
+        
+        /* 상태 배지 */
+        .status-badge {
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: var(--text-sub);
+            background: var(--bg-meta);
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+        }
+        .status-badge.correct { background: rgba(22,163,74,0.15); color: var(--correct); }
+        .status-badge.wrong { background: rgba(220,38,38,0.15); color: var(--wrong); }
+
+        .q-progress-dots { display: flex; gap: 4px; margin-left: 8px; }
+        .p-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-sub); opacity: 0.2; transition: 0.3s; }
+        .p-dot.active { opacity: 1; background: var(--primary); transform: scale(1.2); }
+        .p-dot.passed { opacity: 0.5; background: var(--primary); }
+        .meta-badge { background: var(--bg-card); color: var(--text-sub); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; border: 1px solid var(--bg-meta); font-weight: 600; }
+        
+        .card-body { padding: 24px 20px; position: relative; }
+        .q-text { font-size: 1.6rem; font-weight: 700; line-height: 1.6; color: var(--text-main); margin-bottom: 20px; word-break: break-all; overflow-wrap: break-word; }
+        .q-text:focus { outline: none; }
+        .q-text u, .underline { text-decoration: none; background: linear-gradient(transparent 65%, rgba(253, 224, 71, 0.4) 65%); border-bottom: 2px solid transparent; }
+        @media (prefers-color-scheme: dark) { .q-text u, .underline { background: linear-gradient(transparent 65%, rgba(253, 224, 71, 0.2) 65%); } }
+
+        /* 클릭 가능한 한자 스타일 */
+        .kanji-clickable {
+            position: relative; display: inline-block; cursor: pointer;
+            border-bottom: 2px dotted #94a3b8; padding: 0 2px;
+            z-index: 1; will-change: transform;
+            touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none; user-select: none; outline: none;
+            transition: all 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+        }
+        .kanji-clickable::before {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); min-width: 32px; min-height: 44px;
+            pointer-events: none; z-index: -1; border-radius: 6px;
+        }
+        .kanji-clickable:focus-visible {
+            outline: 2px solid var(--primary); outline-offset: 2px;
+            background: var(--primary-light); border-radius: 4px; border-bottom: none; z-index: 10;
+        }
+        @media (hover: hover) {
+            .kanji-clickable:hover { z-index: 10; color: var(--primary); background: var(--primary-light); border-radius: 4px; border-bottom: none; }
+        }
+        .kanji-clickable:active { z-index: 100; transform: scale(1.05); }
+        .kanji-clickable:active::before { background: var(--primary-light); opacity: 0.5; }
+
+        /* 별표 오버레이 정렬 */
+        .star-box { display: inline-grid; place-items: center; margin: 0 4px; vertical-align: bottom; height: 1.6em; }
+        .star-box > span { grid-area: 1 / 1; line-height: 1.6; display: flex; align-items: center; justify-content: center; }
+        .star-line { font-weight: normal; color: var(--text-main); opacity: 0.8; font-family: inherit; }
+        .star-char { font-weight: 800; font-size: 0.9em; z-index: 1; }
+
+        .q-toolbar { display: flex; justify-content: flex-end; margin-top: 10px; }
+        .btn-tts { background: var(--bg-meta); border: none; color: var(--text-sub); width: 44px; height: 44px; border-radius: 50%; font-size: 1.2rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .btn-tts.speaking { background: var(--primary-light); color: var(--primary); box-shadow: 0 0 0 2px var(--primary); }
+        .btn-tts.speaking .icon { animation: pulse 1s infinite; }
+
+        .options-grid { display: grid; gap: 12px; margin-top: 0; }
+        .option-btn { 
+            position: relative; width: 100%; text-align: left; 
+            padding: 18px 16px 18px 60px; background: var(--bg-card); 
+            border: 1px solid var(--bg-meta); border-radius: var(--radius-btn); 
+            font-size: 1.1rem; font-weight: 500; color: var(--text-main); 
+            cursor: pointer; transition: background 0.15s, transform 0.1s; 
+            min-height: 64px; display: flex; align-items: center; 
+            touch-action: manipulation; -webkit-user-select: none; user-select: none;
+        }
+        .option-btn:active:not(:disabled) { transform: scale(0.98); background: var(--bg-meta); }
+        .option-btn:disabled { opacity: 0.6; pointer-events: none; }
+        .opt-num { position: absolute; left: 16px; width: 32px; height: 32px; border-radius: 50%; background: var(--bg-meta); color: var(--text-sub); font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+        .option-btn.correct { border-color: var(--correct); background: linear-gradient(90deg, rgba(22,163,74,0.15) 0%, rgba(22,163,74,0.05) 100%); color: var(--correct); font-weight: 700; }
+        .option-btn.correct .opt-num { background: var(--correct); color: #fff; }
+        .option-btn.wrong, .option-btn.selected-wrong { border-color: var(--wrong); background: linear-gradient(90deg, rgba(220,38,38,0.15) 0%, rgba(220,38,38,0.05) 100%); color: var(--wrong); font-weight: 700; opacity: 1; box-shadow: 0 0 0 1px var(--wrong); animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        .option-btn.wrong .opt-num, .option-btn.selected-wrong .opt-num { background: var(--wrong); color: #fff; }
+
+        /* 해설 영역 */
+        .explanation-card { background: var(--bg-card); border-radius: var(--radius-card); border: 1px solid var(--bg-meta); display: none; margin-top: 16px; overflow: hidden; animation: fadeIn 0.25s ease-out, gentleSlide 0.3s var(--ease-sys); opacity: 0; transition: opacity 0.3s; }
+        @keyframes gentleSlide { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .tab-nav { display: flex; background: var(--bg-meta); border-bottom: 1px solid var(--bg-meta); padding: 0 8px; }
+        .tab-item { flex: 1; padding: 14px 0; text-align: center; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: var(--text-sub); border-bottom: 2px solid transparent; transition: all 0.15s; }
+        .tab-item.active { color: var(--primary); border-bottom-width: 3px; border-bottom-color: var(--primary); background: var(--bg-card); font-weight: 700; }
+        .tab-pane { padding: 20px 16px; display: none; line-height: 1.6; font-size: 0.95rem; color: var(--text-main); }
+        .tab-pane.active { display: block; animation: fadeIn 0.2s; }
+        .tag-logic { display: inline-block; background: #fff7ed; color: #c2410c; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; border: 1px solid #ffedd5; }
+        @media (prefers-color-scheme: dark) { .tag-logic { background: #431407; color: #fdba74; border-color: #7c2d12; } }
+        #wrongContent > div { padding: 12px; border-radius: 8px; background: var(--bg-meta); margin-bottom: 12px; }
+        #exContent { padding-left: 16px; margin: 0; }
+        #exContent li { margin-bottom: 8px; padding-left: 8px; border-left: 2px solid var(--primary-light); list-style: none; }
+
+        /* 하단 네비게이션 */
+        .fixed-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-h); background: var(--bg-card); border-top: 1px solid var(--bg-meta); padding: 10px 16px; z-index: 100; display: grid; grid-template-columns: 60px 1fr 120px; gap: 12px; align-items: center; }
+        .nav-btn { height: 52px; border: none; border-radius: var(--radius-btn); font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.1s; }
+        .btn-prev { background: var(--bg-card); border: 2px solid var(--bg-meta); color: var(--text-sub); }
+        .btn-next { background: var(--primary); color: #fff; font-size: 1.05rem; gap: 6px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .jump-container { position: relative; height: 52px; }
+        .jump-select { width: 100%; height: 100%; padding: 0 15px; border: 2px solid var(--bg-meta); border-radius: var(--radius-btn); background: var(--bg-card); color: var(--text-main); font-size: 0.95rem; font-weight: 600; appearance: none; }
+        .jump-arrow { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--text-sub); font-size: 1.4rem; }
+
+        /* 모달 시스템 */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 3000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.2s; }
+        .modal-overlay.active { opacity: 1; }
+        .modal-card { background: var(--bg-card); width: 90%; max-width: 400px; padding: 20px; border-radius: 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.2s var(--ease-sys); border: 1px solid var(--bg-meta); }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        
+        #toast { position: fixed; bottom: 100px; left: 50%; transform: translate(-50%, 20px); background: #1e293b; color: #fff; padding: 14px 28px; border-radius: 50px; font-weight: 600; font-size: 1rem; opacity: 0; pointer-events: none; transition: all 0.3s var(--ease-sys); z-index: 2000; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        #toast.show { opacity: 1; transform: translate(-50%, 0); }
+        #toast.correct { background: var(--correct); }
+        #toast.wrong { background: var(--wrong); }
+
+        /* Kanji Modal */
+        .speed-control { display: flex; justify-content: center !important; width: 100%; gap: 8px; margin-bottom: 16px; }
+        /* 여백 최소화 및 높이 조정 */
+        .kaki-container { width: 220px; height: 150px; margin: 0 auto 0 auto; position: relative; }
+        .kaki-container svg { width: 100%; height: 100%; display: block; }
+        .kaki-container svg text { font-family: sans-serif; fill: #ef4444 !important; font-weight: normal; font-size: 10px; transition: opacity 0.2s ease-in-out; }
+        .kaki-container svg path { stroke: var(--text-main); stroke-width: 4px !important; stroke-linecap: round; fill: none; }
+        
+        .reading-box { padding: 16px; background: var(--bg-meta); border-radius: 16px; font-size: 1.1rem; margin-top: 0; }
+        .reading-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+        
+        /* 소스 배지 그룹 */
+        .source-group { display: flex; align-items: center; gap: 6px; }
+        
+        /* 공통 배지 스타일 */
+        .source-badge {
+            font-size: 0.7rem; 
+            background: var(--bg-card);
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid #94a3b8;
+            color: var(--text-sub);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 24px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+            font-weight: 500;
+            white-space: nowrap; 
+        }
+        /* 링크형 배지 호버 */
+        a.source-badge:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+        @media (prefers-color-scheme: dark) {
+            .source-badge { background: var(--bg-body); border-color: var(--bg-meta); }
+        }
+
+        .jisho-link { display: inline-flex !important; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; background: var(--primary-light); border: 2px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 700; font-size: 1rem; transition: all 0.2s cubic-bezier(0.2, 0.0, 0.2, 1); margin-top: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .jisho-link:hover { background: var(--primary); color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(37, 99, 235, 0.25); }
+        .jisho-link:active { transform: translateY(0); }
+
+        .btn-speed { padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; border: 1px solid var(--bg-meta); cursor: pointer; background: var(--bg-card); color: var(--text-sub); transition: 0.2s; min-height: 40px; }
+        .btn-speed.active { background: var(--primary-light); color: var(--primary); border-color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .reading-row { display:grid; gap:4px; }
+        .reading-label { font-weight:800; font-size:0.8rem; width:40px; display:inline-block; }
+        .reading-val { color:var(--text-main); font-weight:500; }
+        .lbl-onyomi { color:#e11d48; } .lbl-kunyomi { color:#059669; } .lbl-kor { color: var(--primary); }
+        
+        .btn-full { width: 100%; padding: 16px; border-radius: 14px; border: none; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 10px; }
+
+        /* 데이터 관리 모달 스타일 */
+        textarea.data-input { width: 100%; height: 140px; padding: 16px; border: 1px solid var(--bg-meta); background: var(--bg-body); color: var(--text-main); border-radius: 12px; margin: 16px 0; font-family: monospace; font-size: 0.9rem; resize: none; display: block; }
+        .btn-row { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-sub { flex: 1; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        
+        .btn-close-modal { background: none; border: 1px solid var(--bg-meta); cursor: pointer; color: var(--text-sub); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+        .btn-close-modal:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    </style>
+</head>
+<body>
+    <div class="sr-only" aria-live="polite" id="liveAnnouncer"></div>
+
+    <div id="stateLayer">
+        <div id="loadingView">
+            <div class="spinner"></div>
+            <p style="margin-top:16px; font-weight:600; color:var(--text-sub);">엔진 초기화 중...</p>
+        </div>
+        <div id="emptyView" style="display:none; text-align:center;">
+            <span class="icon empty-icon">folder_open</span>
+            <h2 style="margin:0; color:var(--text-main);">데이터 없음</h2>
+            <p style="color:var(--text-sub); font-size:1rem; margin:8px 0 24px 0; line-height: 1.5;">학습할 JSON 데이터를 입력하거나<br>샘플을 불러오세요.</p>
+            <div class="btn-row" style="max-width: 340px; margin: 0 auto 16px auto;">
+                <button class="btn-sub" style="background:var(--primary-light); color:var(--primary);" onclick="QuizApp.Session.loadSample('n3')">N3 샘플</button>
+                <button class="btn-sub" style="background:var(--bg-meta); color:var(--text-sub);" onclick="QuizApp.Session.loadSample('n2')">N2 샘플</button>
+            </div>
+            <button class="btn-sub" style="background:var(--primary); color:#fff; max-width:340px; margin:0 auto;" onclick="QuizApp.UI.openModal('settingModal')">
+                직접 데이터 입력
+            </button>
+        </div>
+    </div>
+
+    <header class="fixed-header">
+        <button class="btn-icon" onclick="QuizApp.UI.openModal('settingModal')" aria-label="설정 메뉴 열기">
+            <span class="icon">settings</span>
+        </button>
+        <div class="header-title">JLPT Engine v48</div>
+        <div class="score-container">
+            <div class="score-text">정답률 <span id="scoreText">0%</span></div>
+            <div class="score-track"><div class="score-bar" id="scoreBar"></div></div>
+        </div>
+        <div class="progress-line"><div class="progress-fill" id="progressBar"></div></div>
+    </header>
+
+    <div class="container" id="quizContainer">
+        <div id="quizInterface" style="display:none;">
+            <div class="quiz-card">
+                <div class="card-meta">
+                    <div class="meta-left">
+                        <span class="q-badge" id="qBadge">Q1</span>
+                        <span id="qStatus" class="status-badge">미응답</span>
+                        <div class="q-progress-dots" id="qDots"></div>
+                    </div>
+                    <div class="meta-badge" id="qType">VOCAB</div>
+                </div>
+                <div class="card-body">
+                    <div style="margin-bottom:12px; font-size:0.95rem; color:var(--text-sub); font-weight:500;" id="instruction"></div>
+                    <div class="q-text" id="qText" tabindex="-1"></div>
+                    <div class="q-toolbar">
+                        <button class="btn-tts" id="ttsBtn" onclick="QuizApp.UI.speak()" aria-label="문제 듣기">
+                            <span class="icon">volume_up</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="options-grid" id="options"></div>
+
+            <div class="explanation-card" id="explanation">
+                <div class="tab-nav" role="tablist">
+                    <button class="tab-item active" onclick="QuizApp.UI.switchTab('core')" role="tab" aria-selected="true" aria-controls="tab_core" id="tabbtn_core">💡 핵심 풀이</button>
+                    <button class="tab-item" onclick="QuizApp.UI.switchTab('wrong')" role="tab" aria-selected="false" aria-controls="tab_wrong" id="tabbtn_wrong">🚫 오답 분석</button>
+                    <button class="tab-item" onclick="QuizApp.UI.switchTab('ex')" role="tab" aria-selected="false" aria-controls="tab_ex" id="tabbtn_ex">📚 예문</button>
+                </div>
+                <div id="tab_core" class="tab-pane active" role="tabpanel" aria-labelledby="tabbtn_core">
+                    <div style="margin-bottom:20px;">
+                        <div style="font-weight:700; margin-bottom:6px; color:var(--primary);">🇰🇷 해석</div>
+                        <div id="transText" style="color:var(--text-sub);"></div>
+                    </div>
+                    <div>
+                        <span class="tag-logic">정답 논리</span>
+                        <div id="logicText" style="margin-top:6px;"></div>
+                    </div>
+                    <div id="compArea" style="margin-top:20px; display:none;">
+                        <div style="font-weight:700; margin-bottom:6px; color:var(--text-main);">⚖️ 패턴 비교</div>
+                        <div id="compText" style="color:var(--text-sub);"></div>
+                    </div>
+                </div>
+                <div id="tab_wrong" class="tab-pane" role="tabpanel" aria-labelledby="tabbtn_wrong"><div id="wrongContent"></div></div>
+                <div id="tab_ex" class="tab-pane" role="tabpanel" aria-labelledby="tabbtn_ex"><ul id="exContent" style="padding-left:20px; margin:0;"></ul></div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="fixed-nav">
+        <button class="nav-btn btn-prev" onclick="QuizApp.Session.prev()" id="prevBtn" aria-label="이전 문제">
+            <span class="icon">arrow_back</span>
+        </button>
+        <div class="jump-container">
+            <select class="jump-select" id="jumpList" onchange="QuizApp.Session.jump(this.value)" aria-label="문제 이동"></select>
+            <span class="icon jump-arrow">expand_more</span>
+        </div>
+        <button class="nav-btn btn-next" onclick="QuizApp.Session.next()" id="nextBtn" aria-label="다음 문제">
+            <span id="nextBtnText">다음</span>
+            <span class="icon">arrow_forward</span>
+        </button>
+    </nav>
+
+    <div id="toast" role="alert" aria-live="assertive"></div>
+
+    <div class="modal-overlay" id="kanjiModal" role="dialog" aria-modal="true" aria-labelledby="k-title">
+        <div class="modal-card">
+            <div style="display:flex; justify-content:flex-end; align-items:center; margin-bottom:10px;">
+                <button onclick="QuizApp.UI.closeKanji()" class="btn-close-modal" aria-label="닫기">
+                    <span class="icon" style="font-size:1.5rem;">close</span>
+                </button>
+            </div>
+
+            <div class="speed-control">
+                <button class="btn-speed" data-speed="0.5">0.5x</button>
+                <button class="btn-speed" data-speed="1.0">1.0x</button>
+                <button class="btn-speed active" data-speed="2.0">2.0x</button>
+            </div>
+            
+            <div class="kaki-container" id="kakiSpace"></div>
+            
+            <div class="reading-box">
+                <div class="reading-header">
+                    <span id="k-title" style="font-weight:800; font-size:1.2rem; color:var(--text-main);"></span>
+                    
+                    <div class="source-group">
+                        <a href="https://github.com/Usejun/Kanji" target="_blank" class="source-badge" aria-label="데이터 출처: Usejun/Kanji">
+                            github.com/Usejun/Kanji
+                        </a>
+                        <a href="https://kanjiapi.dev/" target="_blank" class="source-badge reading-source" aria-label="KanjiAPI 공식 사이트">Loading...</a>
+                    </div>
+                </div>
+                <div class="reading-row">
+                    <div>
+                        <span class="reading-label lbl-kor">뜻</span> 
+                        <span class="reading-val" id="valKorean"><span class="loading-dots">...</span></span>
+                    </div>
+                    <div style="margin-top:8px; border-top:1px dashed var(--bg-meta); padding-top:8px;">
+                        <span class="reading-label lbl-onyomi">音</span> 
+                        <span class="reading-val" id="valOnyomi"><span class="loading-dots">...</span></span>
+                    </div>
+                    <div>
+                        <span class="reading-label lbl-kunyomi">訓</span> 
+                        <span class="reading-val" id="valKunyomi"><span class="loading-dots">...</span></span>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:15px; text-align:center;">
+                <a id="jishoLink" href="#" target="_blank" class="jisho-link">
+                    <span class="icon" style="font-size:1.3rem;">menu_book</span>
+                    Jisho 사전에서 더보기
+                </a>
+            </div>
+            <button class="btn-full" style="background:var(--bg-meta); color:var(--text-sub); margin-top:10px;" onclick="QuizApp.UI.closeKanji()">
+                <span class="icon">close</span>닫기
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="settingModal" role="dialog" aria-modal="true" aria-labelledby="settingTitle">
+        <div class="modal-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 id="settingTitle" style="margin:0; font-size:1.3rem; font-weight:800;">데이터 관리</h3>
+                <button onclick="QuizApp.UI.closeModal('settingModal')" class="btn-close-modal" aria-label="설정 닫기">
+                    <span class="icon" style="font-size:1.5rem;">close</span>
+                </button>
+            </div>
+            <textarea class="data-input" id="jsonInput" placeholder='[{ "question": "...", ... }]'></textarea>
+            <div class="btn-row">
+                <button class="btn-sub" style="background:var(--bg-meta); color:var(--text-sub);" onclick="QuizApp.UI.pasteData()">
+                    <span class="icon" style="font-size:1.3rem;">content_paste</span>
+                    붙여넣기
+                </button>
+                <button class="btn-sub" style="background:var(--primary); color:#fff;" onclick="QuizApp.UI.saveData()">
+                    <span class="icon" style="font-size:1.3rem;">save</span>
+                    저장
+                </button>
+            </div>
+            <div class="btn-row">
+                <button class="btn-sub" style="background:rgba(220,38,38,0.1); color:var(--wrong);" onclick="QuizApp.UI.resetData()">
+                    <span class="icon" style="font-size:1.3rem;">delete</span>
+                    초기화
+                </button>
+                <button class="btn-sub" style="background:var(--bg-card); border:1px solid var(--bg-meta);" onclick="QuizApp.UI.closeModal('settingModal')">
+                    <span class="icon" style="font-size:1.3rem;">close</span>
+                    닫기
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="kanjiGeneratorPool"></div>
+
+    <script>
+        const KANJI_TEST = /[\u4E00-\u9FFF]/; 
+        const KANJI_GLOBAL = /[\u4E00-\u9FFF]/g;
+
+        const IDB = {
+            dbName: 'jlpt_kanji_svg_v1',
+            storeName: 'svgs',
+            maxCount: 1000,
+            disabled: false, 
+            
+            async open() {
+                if (this.disabled) return Promise.reject("DB Disabled");
+
+                return new Promise((resolve, reject) => {
+                    const req = indexedDB.open(this.dbName, 1);
+                    req.onupgradeneeded = e => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains(this.storeName)) db.createObjectStore(this.storeName);
+                    };
+                    req.onsuccess = e => resolve(e.target.result);
+                    req.onerror = e => reject(e);
+                });
+            },
+            
+            async put(key, val) {
+                if (this.disabled) return;
+
+                try {
+                    const db = await this.open();
+                    return new Promise((resolve, reject) => {
+                        const tx = db.transaction(this.storeName, 'readwrite');
+                        const store = tx.objectStore(this.storeName);
+                        
+                        const countReq = store.count();
+                        countReq.onsuccess = () => {
+                            if (countReq.result >= this.maxCount) {
+                                this.disabled = true; 
+                                db.close();
+                                const delReq = indexedDB.deleteDatabase(this.dbName);
+                                delReq.onblocked = () => { console.warn('[Cache] DB delete blocked. Ignoring.'); resolve(); };
+                                delReq.onsuccess = () => { console.log('[Cache] IDB cleared.'); resolve(); };
+                                delReq.onerror = () => resolve();
+                                return;
+                            }
+                            store.put(val, key);
+                            tx.oncomplete = () => resolve();
+                            tx.onerror = () => reject();
+                        };
+                    });
+                } catch(e) { /* 무시 */ }
+            },
+            
+            async get(key) {
+                if (this.disabled) return null;
+
+                try {
+                    const db = await this.open();
+                    return new Promise((resolve, reject) => {
+                        const tx = db.transaction(this.storeName, 'readonly');
+                        const req = tx.objectStore(this.storeName).get(key);
+                        req.onsuccess = () => resolve(req.result);
+                        req.onerror = () => reject();
+                    });
+                } catch(e) { return null; }
+            }
+        };
+
+        const QuizApp = (function() {
+            const STORAGE_KEY = 'jlpt_engine_data_master';
+            const STATE_KEY = 'jlpt_engine_state_master';
+            const KOR_DATA_KEY = 'jlpt_kanji_kor_v1';
+            let _lastFocusedElement = null; 
+            
+            const SAMPLE_N3 = [{"id":0,"type":"vocab_reading","instruction":"読み方を選びなさい。","question":"週末は<u class='underline'>幸せ</u>だった。","options":["しあわせ","さいわい","ふしあわせ","しあわ"],"answer":0,"translation":"주말은 행복했다.","explanation":{"correct_logic":"‘幸’는 훈독으로 ‘しあわせ’입니다."}},{"id":1,"type":"grammar","instruction":"（　）に入れるのに最もよいものを一つ選びなさい。","question":"努力した（　）、合格した。","options":["末に","あまり","あげく","ばかり"],"answer":0,"translation":"노력한 끝에 합격했다.","explanation":{"correct_logic":"‘～た末に’는 ‘~한 끝에’라는 긍정적 결말에 쓰입니다."}}];
+            const SAMPLE_N2 = [{"id":0,"type":"vocab_reading","instruction":"読み方を選びなさい。","question":"彼のアリバイは<u class='underline'>曖昧</u>だ。","options":["あいまい","あまい","めいかく","あいま"],"answer":0,"translation":"그의 알리바이는 애매하다.","explanation":{"correct_logic":"‘曖昧’는 ‘あいまい’로 읽습니다."}},{"id":1,"type":"grammar","instruction":"（　）に入れるのに最もよいものを一つ選びなさい。","question":"子供（　）、大人が泣くなんて恥ずかしい。","options":["あるまいしだけあって","ばかりか","どころか"],"answer":0,"translation":"아이도 아니고, 어른이 울다니 부끄럽다.","explanation":{"correct_logic":"‘Nではあるまいし’는 ‘~도 아니고’라는 뜻입니다."}}];
+
+            class LRUCache {
+                constructor(limit = 30) { this.limit = limit; this.cache = new Map(); }
+                get(key) {
+                    if(!this.cache.has(key)) return null;
+                    const v = this.cache.get(key);
+                    this.cache.delete(key); this.cache.set(key, v);
+                    return v;
+                }
+                set(key, val) {
+                    if(this.cache.has(key)) this.cache.delete(key);
+                    else if(this.cache.size >= this.limit) this.cache.delete(this.cache.keys().next().value);
+                    this.cache.set(key, val);
+                }
+            }
+
+            const Kanji = {
+                _svgCache: new LRUCache(50),
+                _readingCache: new LRUCache(50),
+                _koreanMap: null, 
+                _speed: 1.0,
+                _storageDisabled: false,
+
+                init() {
+                    const modal = document.getElementById('kanjiModal');
+                    modal.querySelectorAll('.btn-speed').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            this._speed = parseFloat(e.target.dataset.speed);
+                            modal.querySelectorAll('.btn-speed').forEach(b => b.classList.remove('active'));
+                            e.target.classList.add('active');
+                            const svg = modal.querySelector('.kaki-container svg');
+                            if(svg) UI.animateSVG(svg);
+                        });
+                    });
+                    this.preloadKoreanMap();
+                },
+
+                async preloadKoreanMap() {
+                    if (this._koreanMap instanceof Map && this._koreanMap.size > 0) return;
+                    if (await this.loadFromStorage()) return;
+                    await this.loadFromNetwork();
+                },
+
+                getKorean(char) {
+                    if (!this._koreanMap) return '-'; 
+                    return this._koreanMap.get(char) || '-';
+                },
+                
+                async loadFromStorage() {
+                    try {
+                        const cached = localStorage.getItem(KOR_DATA_KEY);
+                        if (cached) {
+                            const parsedData = JSON.parse(cached);
+                            if (Array.isArray(parsedData) || typeof parsedData === 'object') {
+                                this._koreanMap = new Map(Object.entries(parsedData));
+                                console.log("[Preload] Loaded from LocalStorage");
+                                return true; 
+                            }
+                        }
+                    } catch (e) {
+                        console.warn("[Preload] Storage corrupted.", e);
+                        localStorage.removeItem(KOR_DATA_KEY);
+                    }
+                    return false;
+                },
+
+                async loadFromNetwork() {
+                    console.log("[Preload] Fetching from Network...");
+                    try {
+                        const [kanjiRes, korRes] = await Promise.all([
+                            fetch('https://raw.githubusercontent.com/Usejun/Kanji/main/kanji.txt'),
+                            fetch('https://raw.githubusercontent.com/Usejun/Kanji/main/korean.txt')
+                        ]);
+
+                        if (!kanjiRes.ok || !korRes.ok) throw new Error("Network error");
+
+                        const [kanjiText, korText] = await Promise.all([
+                            kanjiRes.text(), korRes.text()
+                        ]);
+                        
+                        const kanjis = kanjiText.split('\n').map(s => s.trim()).filter(Boolean);
+                        const kors = korText.split('\n').map(s => s.trim()).filter(Boolean);
+                        
+                        this._koreanMap = new Map();
+                        kanjis.forEach((k, i) => {
+                            if (kors[i]) this._koreanMap.set(k, kors[i].replace(/\//g, ', '));
+                        });
+
+                        if (!this._storageDisabled) {
+                            try {
+                                localStorage.setItem(KOR_DATA_KEY, JSON.stringify(Object.fromEntries(this._koreanMap)));
+                                console.log("[Preload] Saved to LocalStorage");
+                            } catch (e) { 
+                                console.warn("[Preload] Storage Quota Exceeded.");
+                                this._storageDisabled = true;
+                            }
+                        }
+
+                    } catch (e) {
+                        console.error("[Preload] Failed", e);
+                        this._koreanMap = new Map(); 
+                    }
+                },
+
+                async getSVG(char) {
+                    if(this._svgCache.get(char)) return this._svgCache.get(char).cloneNode(true);
+                    const cachedSVGString = await IDB.get(char);
+                    if (cachedSVGString) {
+                        const div = document.createElement('div'); div.innerHTML = cachedSVGString;
+                        const svg = div.firstElementChild;
+                        this._svgCache.set(char, svg.cloneNode(true));
+                        return svg;
+                    }
+                    if(!customElements.get('kaki-jun')) await customElements.whenDefined('kaki-jun').catch(()=>{});
+                    const pool = document.getElementById('kanjiGeneratorPool');
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = `<kaki-jun>${char}</kaki-jun>`;
+                    const kaki = wrapper.firstElementChild;
+                    try {
+                        pool.appendChild(kaki);
+                        return new Promise((resolve, reject) => {
+                            let rafId = null;
+                            const cleanup = () => { if(rafId) cancelAnimationFrame(rafId); };
+                            const timer = setTimeout(() => { cleanup(); reject('Timeout'); }, 3000);
+                            const check = () => {
+                                const root = kaki.shadowRoot || kaki;
+                                const svg = root?.querySelector('svg');
+                                if(svg && svg.querySelectorAll('path').length > 0) {
+                                    clearTimeout(timer);
+                                    const clone = svg.cloneNode(true);
+                                    this._svgCache.set(char, clone);
+                                    IDB.put(char, wrapper.innerHTML).catch(()=>{});
+                                    cleanup();
+                                    resolve(clone.cloneNode(true));
+                                } else { rafId = requestAnimationFrame(check); }
+                            };
+                            rafId = requestAnimationFrame(check);
+                        }).finally(() => { if(kaki.parentElement) kaki.remove(); });
+                    } catch(e) { if(kaki.parentElement) kaki.remove(); throw e; }
+                },
+
+                async getData(char) {
+                    if(this._readingCache.get(char)) return this._readingCache.get(char);
+                    try {
+                        const res = await fetch(`https://kanjiapi.dev/v1/kanji/${char}`);
+                        const data = await res.json();
+                        const result = { onyomi: data.on_readings?.join(', ') || '-', kunyomi: data.kun_readings?.join(', ') || '-', source: 'KanjiAPI' };
+                        this._readingCache.set(char, result);
+                        return result;
+                    } catch(e) {
+                        return { onyomi: '-', kunyomi: '-', source: 'Offline' };
+                    }
+                }
+            };
+
+            const Session = {
+                data: [], currIdx: 0, score: 0, solvedCount: 0, currentOrder: [], isLocked: false, history: null,
+                
+                resetState: function() {
+                    try {
+                        this.isLocked = false;
+                        this.currentOrder = [];
+                        UI.switchTab('core');
+                        document.getElementById('explanation').style.display = 'none';
+                        document.getElementById('explanation').style.opacity = '0';
+                        document.querySelectorAll('.option-btn').forEach(btn => {
+                            btn.disabled = false;
+                            btn.style.pointerEvents = 'auto';
+                            btn.classList.remove('correct', 'wrong', 'selected-wrong');
+                        });
+                    } catch(e) { location.reload(); }
+                },
+
+                validateState: function() {
+                    if(this.currIdx < 0 || this.currIdx >= this.data.length) return false;
+                    return true;
+                },
+
+                init: function() {
+                    const raw = localStorage.getItem(STORAGE_KEY);
+                    if (!raw) { this.showEmpty(); return; }
+                    try {
+                        const data = JSON.parse(raw);
+                        this.data = data;
+                        const savedState = localStorage.getItem(STATE_KEY);
+                        if (savedState) {
+                            const state = JSON.parse(savedState);
+                            if (state.history && state.currIdx !== undefined) {
+                                if (Array.isArray(state.history) && state.history.length === data.length) {
+                                    this.history = state.history;
+                                    this.currIdx = state.currIdx;
+                                    this.score = this.history.filter(h => h?.isCorrect === true).length;
+                                    this.solvedCount = this.history.filter(h => h !== null).length;
+                                } else {
+                                    console.warn("History mismatch. Resetting history.");
+                                    this.history = new Array(data.length).fill(null);
+                                    this.currIdx = 0;
+                                }
+                            }
+                        }
+                        if (this.data.length > 0) {
+                            document.getElementById('stateLayer').style.display = 'none';
+                            document.getElementById('quizInterface').style.display = 'block';
+                            UI.updateJumpSelect();
+                            this.render();
+                        } else { this.showEmpty(); }
+                    } catch (e) {
+                        console.error('[Init Error] Data corrupted. Resetting storage.', e);
+                        localStorage.removeItem(STORAGE_KEY);
+                        localStorage.removeItem(STATE_KEY);
+                        this.showEmpty();
+                    }
+                },
+
+                showEmpty: function() {
+                    document.getElementById('loadingView').style.display = 'none';
+                    document.getElementById('emptyView').style.display = 'block';
+                },
+
+                render: function() {
+                    if (!this.validateState()) {
+                        console.warn("Invalid state. Resetting index.");
+                        this.currIdx = 0;
+                        if (!this.validateState()) { 
+                            this.showEmpty();
+                            return;
+                        }
+                    }
+                    this.resetState();
+                    const q = this.data[this.currIdx];
+                    this.currentOrder = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+                    UI.drawQuestion(q, this.currIdx);
+                    document.getElementById('qText').focus();
+                    UI.drawOptions(q, this.currentOrder);
+                    UI.updateMeta();
+                    
+                    const nextBtn = document.getElementById('nextBtn');
+                    nextBtn.disabled = true;
+                    nextBtn.innerHTML = (this.currIdx === this.data.length - 1) ? `종료 <span class="icon">flag</span>` : `다음 <span class="icon">arrow_forward</span>`;
+                    
+                    if (this.history && this.history[this.currIdx] !== null) {
+                        const record = this.history[this.currIdx];
+                        this.isLocked = true;
+                        document.getElementById('explanation').style.display = 'block';
+                        document.getElementById('explanation').style.opacity = '1';
+                        UI.prepareExplanation(q, this.currentOrder);
+                        const btns = document.querySelectorAll('.option-btn');
+                        const userCurrentDisplayIdx = this.currentOrder.indexOf(record.userAnswer);
+                        const correctCurrentDisplayIdx = this.currentOrder.indexOf(q.answer);
+                        
+                        if (record.isCorrect) {
+                            if(btns[userCurrentDisplayIdx]) btns[userCurrentDisplayIdx].classList.add('correct');
+                        } else {
+                            if(btns[userCurrentDisplayIdx]) btns[userCurrentDisplayIdx].classList.add('selected-wrong');
+                            if(btns[correctCurrentDisplayIdx]) btns[correctCurrentDisplayIdx].classList.add('correct');
+                        }
+                        btns.forEach(btn => { btn.disabled = true; btn.style.pointerEvents = 'none'; });
+                        nextBtn.disabled = false;
+                    }
+                    window.scrollTo({top:0, behavior:'smooth'});
+                },
+
+                check: function(displayIdx, originalIdx) {
+                    if(this.isLocked) return;
+                    this.isLocked = true;
+                    if (!this.history) this.history = new Array(this.data.length).fill(null);
+                    document.querySelectorAll('.option-btn').forEach(btn => { btn.disabled = true; btn.style.pointerEvents = 'none'; });
+                    
+                    const q = this.data[this.currIdx];
+                    const isCorrect = originalIdx === q.answer;
+                    this.history[this.currIdx] = { isCorrect: isCorrect, userAnswer: originalIdx, displayIdx: displayIdx };
+                    this.solvedCount++;
+                    if(isCorrect) this.score++;
+                    
+                    localStorage.setItem(STATE_KEY, JSON.stringify({ currIdx: this.currIdx, history: this.history }));
+                    
+                    const btns = document.querySelectorAll('.option-btn');
+                    const correctDisplayIdx = this.currentOrder.indexOf(q.answer);
+                    if(isCorrect) {
+                        btns[displayIdx].classList.add('correct');
+                        UI.toast('check_circle', '정답입니다!', 'correct');
+                        if(navigator.vibrate) navigator.vibrate(50);
+                    } else {
+                        btns[displayIdx].classList.add('selected-wrong');
+                        btns[correctDisplayIdx].classList.add('correct');
+                        UI.toast('error', '오답입니다.', 'wrong');
+                        if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                    }
+                    UI.prepareExplanation(q, this.currentOrder);
+                    document.getElementById('explanation').style.display = 'block';
+                    document.getElementById('explanation').style.opacity = '1';
+                    document.getElementById('nextBtn').disabled = false;
+                    UI.updateMeta();
+                },
+
+                next: function() {
+                    if(this.currIdx < this.data.length - 1) { this.currIdx++; this.render(); } 
+                    else { alert(`시험 종료! 점수: ${this.score}/${this.solvedCount}`); }
+                },
+
+                prev: function() { if(this.currIdx > 0) { this.currIdx--; this.render(); } },
+                jump: function(idx) { this.currIdx = parseInt(idx); this.render(); },
+                loadSample: function(type) {
+                    const data = type === 'n3' ? SAMPLE_N3 : SAMPLE_N2;
+                    this.history = new Array(data.length).fill(null);
+                    this.score = 0; this.solvedCount = 0;
+                    this.bootstrap(data);
+                },
+                bootstrap: function(json) {
+                    if (!json || !Array.isArray(json) || json.length === 0) throw new Error("유효하지 않은 데이터");
+                    this.history = new Array(json.length).fill(null);
+                    this.score = 0; this.solvedCount = 0;
+                    this.data = json; this.currIdx = 0; this.isLocked = false; this.currentOrder = [];
+                    document.getElementById('stateLayer').style.display = 'none';
+                    document.getElementById('quizInterface').style.display = 'block';
+                    UI.updateJumpSelect(); this.resetState(); this.render();
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(json));
+                    localStorage.setItem(STATE_KEY, JSON.stringify({ currIdx: 0, history: this.history }));
+                }
+            };
+
+            const UI = {
+                refreshKanji: function(el) {
+                    if(!el) return;
+                    el.removeAttribute('data-wrapped');
+                    this.wrapKanji(el);
+                },
+
+                drawQuestion: function(q, idx) {
+                    const qText = document.getElementById('qText');
+                    
+                    document.getElementById('qBadge').innerText = `Q${idx + 1}`;
+                    document.getElementById('instruction').innerText = q.instruction || '';
+                    
+                    let processedText = q.question;
+                    if (processedText.includes('★')) {
+                        processedText = processedText.replace(/★/g, `
+                            <span class="star-box">
+                                <span class="star-line">＿＿＿</span>
+                                <span class="star-char">★</span>
+                            </span>
+                        `);
+                    }
+
+                    qText.innerHTML = DOMPurify.sanitize(processedText, {
+                        ALLOWED_TAGS: ['u', 'span', 'div'], 
+                        ALLOWED_ATTR: ['class'] 
+                    });
+                    
+                    this.refreshKanji(qText);
+                    
+                    const kanjiList = (qText.textContent + (q.options?.join('') || '')).match(KANJI_TEST) ? qText.textContent.match(KANJI_GLOBAL) : [];
+                    if(kanjiList) this.preloadKanjiBatch([...new Set(kanjiList)].slice(0, 5));
+                    
+                    const dotsContainer = document.getElementById('qDots');
+                    dotsContainer.innerHTML = '';
+                    const start = Math.max(0, Math.min(idx - 2, Session.data.length - 5));
+                    const end = Math.min(start + 5, Session.data.length);
+                    for(let i=start; i<end; i++) {
+                        const dot = document.createElement('div');
+                        dot.className = `p-dot ${i === idx ? 'active' : ''} ${Session.history?.[i]?.isCorrect === true ? 'passed' : ''}`;
+                        dotsContainer.appendChild(dot);
+                    }
+                },
+                drawOptions: function(q, order) {
+                    const grid = document.getElementById('options');
+                    grid.innerHTML = order.map((origIdx, dispIdx) => `
+                        <button class="option-btn" data-disp="${dispIdx}" data-orig="${origIdx}" aria-label="${dispIdx+1}번 선택지">
+                            <span class="opt-num">${dispIdx + 1}</span>
+                            ${q.options[origIdx]}
+                        </button>
+                    `).join('');
+                },
+                prepareExplanation: function(q, order) {
+                    document.getElementById('transText').innerText = q.translation || '-';
+                    document.getElementById('logicText').innerHTML = DOMPurify.sanitize(q.explanation?.correct_logic || '-');
+                    const dists = q.explanation?.wrong_logics || [];
+                    let distHtml = "";
+                    if(dists.length) {
+                        dists.forEach(d => {
+                            const currentDisplayIdx = order.indexOf(d.option_idx);
+                            const badge = currentDisplayIdx >= 0 
+                                ? `<span style="display:inline-block; width:18px; height:18px; background:var(--wrong); color:#fff; border-radius:50%; font-size:0.75rem; text-align:center; line-height:18px; margin-right:4px;">${currentDisplayIdx+1}</span>` 
+                                : `✖`;
+                            const optTxt = (q.options || [])[d.option_idx] || `선택지 ${d.option_idx + 1}`;
+                            distHtml += `<div style="margin-bottom:12px;"><div style="font-weight:700; color:var(--wrong); margin-bottom:2px;">${badge} ${optTxt}</div><div style="color:var(--text-sub);">${DOMPurify.sanitize(d.reason)}</div></div>`;
+                        });
+                    } else distHtml = "<div style='text-align:center; color:var(--text-sub);'>오답 분석이 없습니다.</div>";
+                    
+                    const wrongContent = document.getElementById('wrongContent');
+                    wrongContent.innerHTML = distHtml;
+
+                    const exs = q.explanation?.examples || [];
+                    const exHtml = exs.length ? exs.map(e=>`<li style="margin-bottom:6px;">${DOMPurify.sanitize(e)}</li>`).join('') : "<div style='text-align:center;'>예문이 없습니다.</div>";
+                    
+                    const exContent = document.getElementById('exContent');
+                    exContent.innerHTML = exHtml;
+                    
+                    const logicText = document.getElementById('logicText');
+
+                    this.refreshKanji(wrongContent);
+                    this.refreshKanji(exContent);
+                    this.refreshKanji(logicText);
+
+                    setTimeout(() => document.getElementById('explanation').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300);
+                },
+                updateMeta: function() {
+                    const history = Session.history || new Array(Session.data.length).fill(null);
+                    const correctCount = history.filter(h => h?.isCorrect === true).length;
+                    const solvedCount = history.filter(h => h !== null).length;
+                    const pct = solvedCount ? Math.round((correctCount / solvedCount) * 100) : 0;
+                    document.getElementById('scoreText').innerText = `${pct}% (${correctCount}/${solvedCount}) · 전체 ${Session.data.length}`;
+                    document.getElementById('scoreBar').style.width = `${pct}%`;
+                    document.getElementById('progressBar').style.width = `${((Session.currIdx + 1) / Session.data.length) * 100}%`;
+                    document.getElementById('qType').innerText = (Session.data[Session.currIdx]?.type || "N3").toUpperCase().replace('_',' ');
+                    
+                    const statusEl = document.getElementById('qStatus');
+                    if (statusEl) {
+                        if (!history[Session.currIdx]) {
+                            statusEl.innerText = '미응답';
+                            statusEl.className = 'status-badge';
+                        } else {
+                            const isCorrect = history[Session.currIdx].isCorrect;
+                            statusEl.innerText = isCorrect ? '✓ 정답' : '✗ 오답';
+                            statusEl.className = isCorrect ? 'status-badge correct' : 'status-badge wrong';
+                        }
+                    }
+
+                    const prevBtn = document.getElementById('prevBtn');
+                    prevBtn.disabled = Session.currIdx === 0;
+                    prevBtn.style.opacity = Session.currIdx === 0 ? 0.5 : 1;
+                    this.updateJumpSelect();
+                },
+                updateJumpSelect: function() {
+                    const list = document.getElementById('jumpList');
+                    if(!list) return;
+                    list.innerHTML = Session.data.map((q, i) => {
+                        const rawText = (typeof q.question === 'string') ? q.question : (q.question?.text || '');
+                        const preview = rawText.replace(/<[^>]*>/g, '').substring(0, 8);
+                        return `<option value="${i}">Q${i+1} ${preview}..</option>`;
+                    }).join('');
+                    list.value = Session.currIdx;
+                },
+                openModal: function(id) {
+                    document.getElementById('stateLayer').style.display = 'none';
+                    const modal = document.getElementById(id);
+                    if(!modal) return;
+                    modal.style.display = 'flex';
+                    setTimeout(() => modal.classList.add('active'), 10);
+                },
+                closeModal: function(id) {
+                    const modal = document.getElementById(id);
+                    if(!modal) return;
+                    modal.classList.remove('active');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                        if(id === 'settingModal' && Session.data.length === 0) document.getElementById('emptyView').style.display = 'block';
+                    }, 200);
+                },
+                switchTab: function(id) {
+                    const map = {core:0, wrong:1, ex:2};
+                    document.querySelectorAll('.tab-item').forEach((btn, i) => {
+                        btn.classList.toggle('active', i === map[id]);
+                        btn.setAttribute('aria-selected', i === map[id]);
+                    });
+                    document.querySelectorAll('.tab-pane').forEach((pane, i) => pane.classList.toggle('active', i === map[id]));
+                },
+                speak: function() {
+                    const synth = window.speechSynthesis;
+                    const btn = document.getElementById('ttsBtn');
+                    const icon = btn.querySelector('.icon');
+                    if(synth.speaking) { synth.cancel(); btn.classList.remove('speaking'); icon.innerText = 'volume_up'; return; }
+                    const u = new SpeechSynthesisUtterance(document.getElementById('qText').innerText);
+                    u.lang = 'ja-JP'; u.rate = 0.9;
+                    
+                    const reset = () => { 
+                        btn.classList.remove('speaking'); 
+                        btn.setAttribute('aria-pressed', 'false'); 
+                        icon.innerText = 'volume_up'; 
+                    };
+                    u.onend = reset;
+                    u.onerror = reset;
+                    
+                    u.onstart = () => { btn.classList.add('speaking'); btn.setAttribute('aria-pressed', 'true'); icon.innerText = 'stop'; };
+                    synth.speak(u);
+                },
+                pasteData: function() {
+                    try { navigator.clipboard.readText().then(text => { document.getElementById('jsonInput').value = text; UI.toast('content_paste', '클립보드에서 데이터를 불러왔습니다', 'correct'); }); } 
+                    catch(e) { alert("권한 필요 또는 클립보드 접근 실패"); }
+                },
+                saveData: function() {
+                    try {
+                        const parsed = JSON.parse(document.getElementById('jsonInput').value);
+                        if(!Array.isArray(parsed)) throw new Error("배열 형식 아님");
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+                        Session.bootstrap(parsed);
+                        this.closeModal('settingModal');
+                        this.toast('save', '데이터 저장 완료', 'correct');
+                    } catch(e) { alert("JSON 오류: " + e.message); }
+                },
+                resetData: function() {
+                    if(confirm("⚠️ 모든 데이터를 삭제하시겠습니까?")) {
+                        localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(STATE_KEY);
+                        Session.data = []; Session.history = null;
+                        this.closeModal('settingModal'); this.toast('delete', '모든 데이터가 초기화되었습니다', 'wrong');
+                        document.getElementById('quizInterface').style.display = 'none'; document.getElementById('emptyView').style.display = 'block';
+                    }
+                },
+                toast: function(icon, msg, type) {
+                    const t = document.getElementById('toast');
+                    t.className = type || ''; t.innerHTML = `<span class="icon">${icon}</span> ${msg}`;
+                    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
+                },
+                wrapKanji: function(el) {
+                    if (!el || el.dataset.wrapped === 'true') return;
+                    
+                    const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+                    const nodes = []; let n;
+                    while((n = walk.nextNode()) !== null) {
+                        if(KANJI_TEST.test(n.textContent)) nodes.push(n);
+                    }
+                    
+                    nodes.forEach(node => {
+                        if(node.parentElement?.classList.contains('kanji-clickable')) return;
+                        
+                        const fragment = document.createDocumentFragment();
+                        const text = node.textContent;
+                        for(let i=0; i<text.length; i++) {
+                            const char = text[i];
+                            if(KANJI_TEST.test(char)) {
+                                const span = document.createElement('span');
+                                span.className = 'kanji-clickable';
+                                span.textContent = char;
+                                span.setAttribute('tabindex', '0');
+                                span.setAttribute('role', 'button');
+                                span.setAttribute('aria-label', `한자 ${char} 상세 정보 보기`);
+                                
+                                span.onclick = (e) => {
+                                    _lastFocusedElement = e.currentTarget;
+                                    this.openKanji(char);
+                                };
+                                span.addEventListener('keydown', (e) => {
+                                    if(e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        _lastFocusedElement = e.currentTarget;
+                                        this.openKanji(char);
+                                    }
+                                });
+                                fragment.appendChild(span);
+                            } else {
+                                fragment.appendChild(document.createTextNode(char));
+                            }
+                        }
+                        node.parentNode.replaceChild(fragment, node);
+                    });
+                    
+                    el.dataset.wrapped = "true";
+                },
+                openKanji: async function(char) {
+                    const modal = document.getElementById('kanjiModal');
+                    const space = modal.querySelector('.kaki-container');
+                    
+                    Kanji._speed = 2.0; 
+                    modal.querySelectorAll('.btn-speed').forEach(btn => { btn.classList.toggle('active', btn.dataset.speed === "2.0"); });
+
+                    document.getElementById('k-title').innerText = char;
+                    document.getElementById('jishoLink').href = `https://jisho.org/search/${encodeURIComponent(char)}%23kanji`;
+                    modal.style.display = 'flex';
+                    setTimeout(() => {
+                        modal.classList.add('active');
+                        modal.querySelector('.btn-close-modal')?.focus();
+                    }, 10);
+                    
+                    space.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%;"><div class="skeleton-anim" style="width:100%; height:100%;"></div></div>`;
+                    document.getElementById('valOnyomi').innerHTML = '<span class="loading-dots">...</span>';
+                    document.getElementById('valKunyomi').innerHTML = '<span class="loading-dots">...</span>';
+                    document.getElementById('valKorean').innerHTML = '<span class="loading-dots">...</span>';
+                    modal.querySelector('.reading-source').innerText = 'Loading...';
+
+                    try {
+                        const svg = await Kanji.getSVG(char);
+                        space.innerHTML = ''; space.appendChild(svg);
+                        this.animateSVG(svg);
+                        
+                        const [data, korMeaning] = await Promise.all([
+                            Kanji.getData(char),
+                            Kanji.getKorean(char)
+                        ]);
+                        
+                        document.getElementById('valOnyomi').innerText = data.onyomi;
+                        document.getElementById('valKunyomi').innerText = data.kunyomi;
+                        document.getElementById('valKorean').innerText = korMeaning;
+                        modal.querySelector('.reading-source').innerText = data.source;
+                    } catch(e) {
+                        space.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding-top:60px;">데이터 없음</div>';
+                    }
+                },
+                animateSVG: function(svg) {
+                    const paths = svg.querySelectorAll('path');
+                    const texts = svg.querySelectorAll('text');
+                    const speed = Kanji._speed;
+                    const reset = (el) => { el.removeAttribute('style'); el.style.opacity = '0'; el.style.transition = 'none'; };
+                    paths.forEach(p => {
+                        reset(p);
+                        p.style.stroke = 'var(--text-main)'; p.style.strokeWidth = '4px'; p.style.strokeLinecap = 'round'; p.style.fill = 'none';
+                        const len = p.getTotalLength(); p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
+                    });
+                    texts.forEach(t => { reset(t); t.style.fontSize = '10px'; t.style.fill = '#ef4444'; });
+                    paths.forEach((p, i) => {
+                        setTimeout(() => {
+                            const duration = 0.6 / speed;
+                            p.style.transition = `stroke-dashoffset ${duration}s cubic-bezier(0.33,1,0.68,1), opacity 0.2s`;
+                            p.style.opacity = '1'; p.style.strokeDashoffset = '0';
+                            if(texts[i]) { texts[i].style.transition = 'opacity 0.2s'; texts[i].style.opacity = '1'; }
+                        }, (i * 350) / speed);
+                    });
+                },
+                closeKanji: function() {
+                    const modal = document.getElementById('kanjiModal');
+                    modal.classList.remove('active'); 
+                    setTimeout(() => { 
+                        modal.style.display = 'none'; 
+                        if (_lastFocusedElement) {
+                            _lastFocusedElement.focus();
+                            _lastFocusedElement = null;
+                        }
+                    }, 200);
+                },
+                preloadKanjiBatch: function(kanjiList) {
+                    const textContent = kanjiList.join('');
+                    const matches = textContent.match(KANJI_GLOBAL) || [];
+                    const unique = [...new Set(matches)];
+                    unique.forEach(char => Kanji.getSVG(char).catch(()=>{}));
+                }
+            };
+
+            return { Kanji: Kanji, Session: Session, UI: UI, init: () => { Kanji.init(); Session.init(); }, loadSample: (type) => Session.loadSample(type) };
+        })();
+
+        // [v48] Final Architecture: Scoped, Promoted State, Arrow Functions
+        const App = {
+            isInitialized: false,
+            touch: { startX: 0, startY: 0, startTime: 0, isScrolling: false },
+
+            init() {
+                if (this.isInitialized) return;
+                this.isInitialized = true;
+                
+                this.bindGlobalEvents();
+                this.bindUIEvents();
+                this.bindTouchEvents();
+                
+                QuizApp.init();
+            },
+
+            bindGlobalEvents() {
+                // Keyboard (using arrow function to safely access this if needed later)
+                document.addEventListener('keydown', (e) => {
+                    const modal = document.querySelector('.modal-overlay.active');
+                    if(modal) {
+                        if(e.key === 'Escape') { QuizApp.UI.closeModal('settingModal'); QuizApp.UI.closeKanji(); }
+                        return;
+                    }
+                    if(e.key === 'ArrowLeft') QuizApp.Session.prev();
+                    else if(e.key === 'ArrowRight') QuizApp.Session.next();
+                    else if(e.key >= '1' && e.key <= '4') {
+                        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+                        const sess = QuizApp.Session;
+                        if(sess.currentOrder && sess.currentOrder.length && !sess.isLocked) {
+                            const idx = parseInt(e.key) - 1;
+                            const btn = document.querySelector(`.option-btn[data-disp="${idx}"]`);
+                            if(btn) btn.click();
+                        }
+                    }
+                });
+            },
+
+            bindUIEvents() {
+                document.getElementById('options')?.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.option-btn');
+                    if (btn && !QuizApp.Session.isLocked) {
+                        QuizApp.Session.check(parseInt(btn.dataset.disp), parseInt(btn.dataset.orig));
+                    }
+                });
+                document.getElementById('settingModal')?.addEventListener('click', e => { if(e.target === e.currentTarget) QuizApp.UI.closeModal('settingModal'); });
+                document.getElementById('kanjiModal')?.addEventListener('click', e => { if(e.target === e.currentTarget) QuizApp.UI.closeKanji(); });
+            },
+
+            bindTouchEvents() {
+                // Touch Logic using promoted state 'this.touch'
+                document.addEventListener('touchstart', (e) => {
+                    if (e.target.closest('button, a, .modal-overlay, .tab-item')) { this.touch.startX = 0; return; }
+                    this.touch.startX = e.changedTouches[0].screenX;
+                    this.touch.startY = e.changedTouches[0].screenY;
+                    this.touch.startTime = Date.now();
+                    this.touch.isScrolling = false; 
+                }, {passive: true});
+
+                document.addEventListener('touchmove', (e) => {
+                    if (this.touch.startX === 0 || this.touch.isScrolling) return;
+                    const diffX = Math.abs(e.changedTouches[0].screenX - this.touch.startX);
+                    const diffY = Math.abs(e.changedTouches[0].screenY - this.touch.startY);
+                    if (diffY > diffX) this.touch.isScrolling = true;
+                }, {passive: true});
+                
+                document.addEventListener('touchend', (e) => {
+                    if (this.touch.startX === 0 || this.touch.isScrolling) return;
+                    const diffX = e.changedTouches[0].screenX - this.touch.startX;
+                    const diffY = Math.abs(e.changedTouches[0].screenY - this.touch.startY);
+                    if (Math.abs(diffX) > 80 && diffY < 40 && (Date.now() - this.touch.startTime) < 1000) {
+                        if (diffX < 0) QuizApp.Session.next(); else QuizApp.Session.prev();          
+                    }
+                }, {passive: true});
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    </script>
+</body>
+</html>
