@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JLPT Engine (Final v3.2 AMOLED Fix)</title>
+    <title>JLPT Engine (Final v3.4 Smart UX)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
             --correct: #16a34a; --wrong: #dc2626; 
             --progress-glow: rgba(37, 99, 235, 0.3);
             
-            /* [v3.2] 라이트모드: 적당한 파스텔톤 유지 */
+            /* [v3.3] 라이트모드: 눈이 편안한 형광펜 노랑 */
             --mark-color: rgba(253, 224, 71, 0.6); 
             
             --header-h: 60px; --nav-h: 70px;
@@ -60,8 +60,8 @@
 
                 --progress-glow: rgba(74, 222, 128, 0.2); 
                 
-                /* [v3.2 핵심] 다크모드 AMOLED 대응: #FFEA00 베이스 + 고명도(0.95) */
-                --mark-color: rgba(255, 234, 0, 0.95); 
+                /* [v3.3] 다크모드: 선명한 노랑, 투명도 0.85 */
+                --mark-color: rgba(255, 234, 0, 0.85); 
             }
             
             .tab-item.active { 
@@ -103,10 +103,9 @@
                 color: var(--text-explain) !important; 
             }
             
-            /* [v3.2 핵심] 다크모드 전용 글로우(Drop Shadow) 효과 추가 */
+            /* [v3.3] 글로우 삭제 -> 깔끔한 텍스트 */
             .q-text u, .underline, .q-range {
-                filter: drop-shadow(0 0 2px var(--mark-color)) !important;
-                /* mix-blend-mode: normal; (기본값이므로 생략 가능하나 명시적 안정성 확보) */
+                filter: none !important; 
             }
         }
 
@@ -154,20 +153,14 @@
         .q-text { font-size: 1.6rem; font-weight: 700; line-height: 1.6; color: var(--text-question); margin-bottom: 20px; word-break: break-all; overflow-wrap: break-word; }
         .q-text:focus { outline: none; }
         
-        /* [v3.2] 문제 범위 표시: 면적 + 패딩 + 라운딩 */
+        /* [v3.3] 문제 범위 표시: 형광펜(면적) 스타일, 글로우 제거 */
         .q-text u, .underline, .q-range { 
             text-decoration: none !important;
-            /* 형광펜 효과 (하단 45% 채움) */
             background: linear-gradient(to top, var(--mark-color) 45%, transparent 45%);
-            
-            /* [v3.2] 안전 마진 확보 (패딩 및 라운딩) */
             border-radius: 4px;
             padding: 0 2px;
-            
             display: inline;
             position: relative;
-            
-            /* 줄바꿈 시 스타일 유지 */
             -webkit-box-decoration-break: clone;
             box-decoration-break: clone;
         }
@@ -941,6 +934,24 @@
             };
 
             const UI = {
+                // [v3.4] 환경 점검 및 가이드 (삼성인터넷 등)
+                checkEnvironment: function() {
+                    const isSamsung = /SamsungBrowser/i.test(navigator.userAgent);
+                    if (!isSamsung) return;
+
+                    const KEY = 'jlpt_warn_samsung_dark_ts';
+                    const last = Number(localStorage.getItem(KEY) || 0);
+                    const now = Date.now();
+                    const COOLDOWN = 7 * 24 * 60 * 60 * 1000; // 7일 쿨다운
+
+                    if (now - last > COOLDOWN) {
+                        setTimeout(() => {
+                            this.toast('info', '삼성 인터넷: 색상이 이상하면 "어두운 화면 강제 적용"을 꺼주세요.', 'wrong');
+                            localStorage.setItem(KEY, now);
+                        }, 1500); 
+                    }
+                },
+
                 // [B-2 Patch] 텍스트 정규화: 모든 밑줄 포맷을 표준 <u class="q-range">로 변환
                 normalizeText: function(html) {
                     if (!html) return "";
@@ -996,14 +1007,18 @@
                         dotsContainer.appendChild(dot);
                     }
 
-                    // ✅ [Final_v2.1] 온보딩 힌트 호출
+                    // ✅ [v3.4] 온보딩 힌트 호출 (7일 쿨다운 적용)
                     this.showOnboarding();
                 },
                 
-                // ✅ [Final_v2.1] 온보딩 힌트 표시 로직
+                // ✅ [v3.4] 온보딩 힌트 표시 로직 (Timestamp 기반 쿨다운)
                 showOnboarding: function() {
-                    const hasSeen = localStorage.getItem('jlpt_hint_seen');
-                    if (hasSeen) return;
+                    const KEY = 'jlpt_hint_kanji_ts';
+                    const last = Number(localStorage.getItem(KEY) || 0);
+                    const now = Date.now();
+                    const COOLDOWN = 7 * 24 * 60 * 60 * 1000; // 7일
+
+                    if (now - last < COOLDOWN) return; // 쿨다운 중이면 표시 안 함
 
                     const hint = document.getElementById('hintContainer');
                     if (!hint) return;
@@ -1012,11 +1027,11 @@
                     // 약간의 딜레이 후 표시 (자연스럽게)
                     setTimeout(() => hint.classList.add('visible'), 500);
 
-                    // 3.5초 후 사라짐
+                    // 4초 후 사라짐 & 타임스탬프 갱신
                     setTimeout(() => {
                         hint.classList.remove('visible');
-                        setTimeout(() => hint.style.display = 'none', 500); // 애니메이션 후 제거
-                        localStorage.setItem('jlpt_hint_seen', 'true');
+                        setTimeout(() => hint.style.display = 'none', 500); 
+                        localStorage.setItem(KEY, now);
                     }, 4000);
                 },
 
@@ -1309,6 +1324,9 @@
                 this.bindTouchEvents();
                 
                 QuizApp.init();
+                
+                // [v3.4] 앱 초기화 시 환경 점검 실행
+                QuizApp.UI.checkEnvironment();
             },
 
             bindGlobalEvents() {
