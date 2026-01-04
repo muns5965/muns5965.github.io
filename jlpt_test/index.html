@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JLPT Engine (Final v3.1 Highlighter)</title>
+    <title>JLPT Engine (Final v3.2 AMOLED Fix)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
             --correct: #16a34a; --wrong: #dc2626; 
             --progress-glow: rgba(37, 99, 235, 0.3);
             
-            /* [v3.1 수정] 형광펜 색상 (라이트): 너무 진하지 않은 노랑 */
+            /* [v3.2] 라이트모드: 적당한 파스텔톤 유지 */
             --mark-color: rgba(253, 224, 71, 0.6); 
             
             --header-h: 60px; --nav-h: 70px;
@@ -60,8 +60,8 @@
 
                 --progress-glow: rgba(74, 222, 128, 0.2); 
                 
-                /* [v3.1 수정] 형광펜 색상 (다크): AMOLED 가독성 고려한 밝은 노랑 (투명도 조절) */
-                --mark-color: rgba(253, 224, 71, 0.35); 
+                /* [v3.2 핵심] 다크모드 AMOLED 대응: #FFEA00 베이스 + 고명도(0.95) */
+                --mark-color: rgba(255, 234, 0, 0.95); 
             }
             
             .tab-item.active { 
@@ -101,6 +101,12 @@
             
             #transText, #logicText, #compText, #wrongContent, #exContent {
                 color: var(--text-explain) !important; 
+            }
+            
+            /* [v3.2 핵심] 다크모드 전용 글로우(Drop Shadow) 효과 추가 */
+            .q-text u, .underline, .q-range {
+                filter: drop-shadow(0 0 2px var(--mark-color)) !important;
+                /* mix-blend-mode: normal; (기본값이므로 생략 가능하나 명시적 안정성 확보) */
             }
         }
 
@@ -148,17 +154,24 @@
         .q-text { font-size: 1.6rem; font-weight: 700; line-height: 1.6; color: var(--text-question); margin-bottom: 20px; word-break: break-all; overflow-wrap: break-word; }
         .q-text:focus { outline: none; }
         
-        /* [v3.1 핵심 패치] 문제 범위 표시: 선(Line) -> 면(Highlighter) 방식 변경 */
+        /* [v3.2] 문제 범위 표시: 면적 + 패딩 + 라운딩 */
         .q-text u, .underline, .q-range { 
             text-decoration: none !important;
+            /* 형광펜 효과 (하단 45% 채움) */
             background: linear-gradient(to top, var(--mark-color) 45%, transparent 45%);
-            border-radius: 3px;
-            padding: 0 1px;
+            
+            /* [v3.2] 안전 마진 확보 (패딩 및 라운딩) */
+            border-radius: 4px;
+            padding: 0 2px;
+            
             display: inline;
             position: relative;
+            
+            /* 줄바꿈 시 스타일 유지 */
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
         }
 
-        /* 기존 가상요소(::after) 제거 (충돌 방지) */
         .q-text u::after, .underline::after, .q-range::after {
             display: none !important;
             content: none !important;
