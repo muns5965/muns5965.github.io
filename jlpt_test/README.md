@@ -164,4 +164,4 @@ JLPT 시험 대비를 위해 문제를 풀면서
 
 ## 🔗 데모 페이지
 
-👉 https://muns5965.github.io/jlpt_test/
+👉 https://muns5965.github.io/jlpt_test/index.html
