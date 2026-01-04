@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JLPT Engine (Final v3.4 Smart UX)</title>
+    <title>JLPT Engine (Final v3.6 Polished)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
             --correct: #16a34a; --wrong: #dc2626; 
             --progress-glow: rgba(37, 99, 235, 0.3);
             
-            /* [v3.3] 라이트모드: 눈이 편안한 형광펜 노랑 */
+            /* [v3.6] 라이트모드 형광펜: 눈이 편안한 파스텔 옐로우 */
             --mark-color: rgba(253, 224, 71, 0.6); 
             
             --header-h: 60px; --nav-h: 70px;
@@ -60,7 +60,7 @@
 
                 --progress-glow: rgba(74, 222, 128, 0.2); 
                 
-                /* [v3.3] 다크모드: 선명한 노랑, 투명도 0.85 */
+                /* [v3.6] 다크모드 형광펜: 선명한 골드 옐로우 (투명도 0.85) */
                 --mark-color: rgba(255, 234, 0, 0.85); 
             }
             
@@ -103,7 +103,7 @@
                 color: var(--text-explain) !important; 
             }
             
-            /* [v3.3] 글로우 삭제 -> 깔끔한 텍스트 */
+            /* 다크모드에서도 글로우 없이 깔끔하게 */
             .q-text u, .underline, .q-range {
                 filter: none !important; 
             }
@@ -153,18 +153,28 @@
         .q-text { font-size: 1.6rem; font-weight: 700; line-height: 1.6; color: var(--text-question); margin-bottom: 20px; word-break: break-all; overflow-wrap: break-word; }
         .q-text:focus { outline: none; }
         
-        /* [v3.3] 문제 범위 표시: 형광펜(면적) 스타일, 글로우 제거 */
+        /* [v3.6 최종] 문제 범위 표시: 높이 30% + 4px 라운딩 + 패딩 2px */
         .q-text u, .underline, .q-range { 
             text-decoration: none !important;
-            background: linear-gradient(to top, var(--mark-color) 45%, transparent 45%);
+            
+            /* 핵심: 글자 하단 30%만 채움 (가독성 확보) */
+            background: linear-gradient(to top, var(--mark-color) 30%, transparent 30%);
+            
+            /* 핵심: 모서리를 둥글게 하여 시각적 안정을 주고 렌더링 품질 향상 */
             border-radius: 4px;
+            
+            /* 핵심: 글자와 색상 영역 사이 미세 여백 */
             padding: 0 2px;
+            
             display: inline;
             position: relative;
+            
+            /* 줄바꿈 시에도 스타일 유지 */
             -webkit-box-decoration-break: clone;
             box-decoration-break: clone;
         }
 
+        /* 기존 가상요소 제거 */
         .q-text u::after, .underline::after, .q-range::after {
             display: none !important;
             content: none !important;
