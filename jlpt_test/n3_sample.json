@@ -16,16 +16,9 @@
         { "option_idx": 2, "reason": "'輸'는 단음 'ゆ'로 읽으며 장음이 아닙니다." },
         { "option_idx": 3, "reason": "장음과 촉음 모두 잘못된 읽기입니다." }
       ],
-      "contrast": "輸出(ゆしゅつ) vs 輸入(ゆにゅう)",
       "examples": ["自動車を輸出する。", "輸出が増える。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Phonetic_Gemination" },
-        { "option_idx": 2, "severity": "S2", "type": "Phonetic_VowelLength" },
-        { "option_idx": 3, "severity": "S1", "type": "Phonetic_Combined" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate0_Hiragana_Only"] }
   },
   {
     "id": 1,
@@ -44,16 +37,9 @@
         { "option_idx": 2, "reason": "'高級(こうきゅう)'는 품질이나 지위가 높음을 의미합니다." },
         { "option_idx": 3, "reason": "'階級(かいきゅう)'는 신분이나 지위의 등급을 의미합니다." }
       ],
-      "contrast": "普及(보급) vs 流行(유행)",
       "examples": ["インターネットが普及する。", "省エネ製品の普及。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Phonetic_Semantic" },
-        { "option_idx": 2, "severity": "S1", "type": "Phonetic_Suffix" },
-        { "option_idx": 3, "severity": "S1", "type": "Phonetic_Suffix" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 2,
@@ -68,20 +54,13 @@
       "summary": "'～할 때마다 항상'이라는 의미의 '～たびに' 문형입니다.",
       "correct_logic": "어떤 행위를 할 때마다 같은 결과가 일어남을 나타낼 때 사용합니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'ついでに'는 '하는 김에'라는 의미로, 기회를 이용해 다른 일을 할 때 씁니다." },
-        { "option_idx": 2, "reason": "'最中に'는 '한창 ~하는 중에'라는 의미로, 동작의 진행 시점을 강조합니다." },
-        { "option_idx": 3, "reason": "'とおりに'는 '～대로, ～과 같이'라는 의미입니다." }
+        { "option_idx": 1, "reason": "'ついでに'는 '하는 김에'라는 의미입니다." },
+        { "option_idx": 2, "reason": "'最中に'는 '한창 ~하는 중에'라는 의미입니다." },
+        { "option_idx": 3, "reason": "'とおりに'는 '～대로'라는 의미입니다." }
       ],
-      "contrast": "たびに(항상 반복) vs とき(단순 시점)",
       "examples": ["会うたびにきれいになる。", "出張のたびにお土産を買う。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Semantic_Context" },
-        { "option_idx": 2, "severity": "S2", "type": "Semantic_Aspect" },
-        { "option_idx": 3, "severity": "S1", "type": "Semantic_Meaning" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 3,
@@ -94,16 +73,15 @@
     "translation": "옆 공사 소리가 너무 시끄러워서 신경이 쓰여 견딜 수가 없다.",
     "explanation": {
       "summary": "정도나 감정을 강조하는 '～てしかたがない' 문형입니다.",
-      "correct_logic": "올바른 순서는 [3.とても] → [2.うるさくて] → [0.気に(★)] → [1.なって] 입니다. 'とてもうるさくて(너무 시끄러워서)'가 원인이고 '気になって(신경 쓰여서)'가 결과적 심리 상태입니다.",
+      "correct_logic": "올바른 순서는 [3.とても] → [2.うるさくて] → [0.気に(★)] → [1.なって] 입니다.",
       "wrong_logics": [
         { "option_idx": 3, "reason": "배치 오류: 'とても'는 형용사 'うるさくて'를 수식하므로 맨 앞에 옵니다." },
         { "option_idx": 2, "reason": "배치 오류: 'うるさくて'는 '気になって'의 원인이므로 그 앞에 옵니다." },
         { "option_idx": 1, "reason": "결합 오류: 'なって'는 '気に' 뒤에 붙어 관용구 '気になる'를 형성해야 합니다." }
       ],
-      "contrast": "てしかたがない(참을 수 없다) vs てしょうがない(동일 의미)",
       "examples": ["お腹が空いてしかたがない。", "眠くてしかたがない。"]
     },
-    "meta": { "validated_by": ["Gate4", "Bidirectional", "No_Distractor"] }
+    "meta": { "validated_by": ["Gate3_Unique_Ordering"] }
   },
   {
     "id": 4,
@@ -111,27 +89,20 @@
     "instruction": "下線の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
     "passage": null,
     "question": "旅行の<u>支度</u>をする。",
-    "options": ["したく", "じたく", "し度", "しとう"],
+    "options": ["したく", "じたく", "しど", "しとう"],
     "answer": 0,
     "translation": "여행 채비(준비)를 한다.",
     "explanation": {
       "summary": "'支度'는 'したく'로 읽으며 '준비, 채비'를 의미합니다.",
       "correct_logic": "특별한 읽기(숙자훈)에 해당하므로 주의해야 합니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "탁음 'じ'가 들어가지 않습니다." },
-        { "option_idx": 2, "reason": "뒤의 한자를 훈독(ど)으로 잘못 읽은 오답입니다." },
-        { "option_idx": 3, "reason": "일반적인 음독 규칙(度-とう)을 잘못 적용한 오답입니다." }
+        { "option_idx": 1, "reason": "탁음화 오류: 'し'가 'じ'로 변하지 않습니다." },
+        { "option_idx": 2, "reason": "훈독 오류: 한자 표기를 뺀 순수 히라가나 오답입니다." },
+        { "option_idx": 3, "reason": "음독 오류: 일반적인 음독 규칙(度-とう)을 잘못 적용한 오답입니다." }
       ],
-      "contrast": "支度(したく) vs 準備(じゅんび)",
       "examples": ["食事の支度。", "冬の支度。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Phonetic_Voicing" },
-        { "option_idx": 2, "severity": "S2", "type": "Phonetic_KunOn" },
-        { "option_idx": 3, "severity": "S3", "type": "Phonetic_RuleOvergeneralization" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate0_Hiragana_Only", "Corrected_Logic"] }
   },
   {
     "id": 5,
@@ -144,22 +115,15 @@
     "translation": "중요한 회의가 있어서, 열이 있어도 쉴 수는 없다.",
     "explanation": {
       "summary": "'～わけにはいかない' (사회적/심리적 이유로 ~할 수 없다) 문형입니다.",
-      "correct_logic": "부정의 의미를 만들기 위해 동사 사전형(기본형) '休む'에 연결합니다. '休むわけにはいかない'는 '쉴 수는 없다'는 뜻입니다.",
+      "correct_logic": "부정의 의미를 만들기 위해 동사 사전형(기본형) '休む'에 연결합니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'休まない'와 결합하면 '쉬지 않을 수는 없다(꼭 쉬어야 한다)'는 의미가 되어 문맥과 맞지 않습니다." },
-        { "option_idx": 2, "reason": "과거형 '休んだ'와 결합하면 시제가 맞지 않아 어색합니다." },
-        { "option_idx": 3, "reason": "태형 '休んで'는 이 문형과 직접 연결되지 않습니다." }
+        { "option_idx": 1, "reason": "'休まない'와 결합하면 의미가 반대가 됩니다." },
+        { "option_idx": 2, "reason": "과거형 '休んだ'와 결합하면 시제가 맞지 않습니다." },
+        { "option_idx": 3, "reason": "태형 '休んで'는 연결되지 않습니다." }
       ],
-      "contrast": "わけにはいかない(도리상 불가) vs ことができない(능력상 불가)",
       "examples": ["先輩の命令だから、断るわけにはいかない。", "明日テストがあるから、寝るわけにはいかない。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S3", "type": "Grammar_Polarily" },
-        { "option_idx": 2, "severity": "S1", "type": "Grammar_Tense" },
-        { "option_idx": 3, "severity": "S1", "type": "Grammar_Form" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 6,
@@ -174,20 +138,13 @@
       "summary": "낭비를 줄이고 아끼는 것을 의미하는 단어는 '節約'입니다.",
       "correct_logic": "돈이나 자원을 아끼는 '節約(せつやく)'가 전기세와 호응합니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'予約(よやく)'는 미리 약속해 두는 것(예약)입니다." },
-        { "option_idx": 2, "reason": "'条約(じょうやく)'는 국가 간의 합의(조약)입니다." },
-        { "option_idx": 3, "reason": "'省略(しょうりゃく)'는 줄여서 간단하게 하는 것(생략)입니다." }
+        { "option_idx": 1, "reason": "'予約'는 예약을 의미합니다." },
+        { "option_idx": 2, "reason": "'条約'는 조약을 의미합니다." },
+        { "option_idx": 3, "reason": "'省略'는 생략을 의미합니다." }
       ],
-      "contrast": "節約(절약) vs 短縮(단축)",
       "examples": ["水を節約する。", "時間の節約。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Phonetic_Suffix" },
-        { "option_idx": 2, "severity": "S1", "type": "Phonetic_Suffix" },
-        { "option_idx": 3, "severity": "S2", "type": "Phonetic_Suffix" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 7,
@@ -199,45 +156,37 @@
     "answer": 0,
     "translation": "합격했다는 것은, 그가 노력을 많이 했다는 것이다.",
     "explanation": {
-      "summary": "'Aということは、Bということだ' (A라는 것은 즉 B라는 뜻이다) 문형입니다.",
-      "correct_logic": "올바른 순서는 [1.彼が] → [3.たくさん] → [0.努力(★)] → [2.した] 입니다. 'たくさん(많이)'가 '努力した(노력했다)'를 수식하는 구조입니다.",
+      "summary": "'Aということは、Bということだ' 문형입니다.",
+      "correct_logic": "올바른 순서는 [1.彼が] → [3.たくさん] → [0.努力(★)] → [2.した] 입니다.",
       "wrong_logics": [
         { "option_idx": 1, "reason": "배치 오류: '彼が'는 종속절의 주어이므로 맨 앞에 위치해야 합니다." },
         { "option_idx": 3, "reason": "배치 오류: 'たくさん'은 동사구 '努力した' 앞에 위치하여 정도를 나타냅니다." },
         { "option_idx": 2, "reason": "결합 오류: 'した'는 명사 '努力' 뒤에 붙어 동사구를 완성합니다." }
       ],
-      "contrast": "ということは(정의/결론) vs というのは(설명)",
-      "examples": ["涼しくなったということは、秋が来たということだ。", "彼が来ないということは、欠席ということだ。"]
+      "examples": ["涼しくなったということは、秋が来たということだ。"]
     },
-    "meta": { "validated_by": ["Gate4", "Bidirectional", "No_Distractor"] }
+    "meta": { "validated_by": ["Gate3_Unique_Ordering"] }
   },
   {
     "id": 8,
-    "type": "vocab_reading",
-    "instruction": "下線の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
+    "type": "vocab_writing",
+    "instruction": "下線の言葉を漢字で書くとき、最もよいものを1・2・3・4から一つ選びなさい。",
     "passage": null,
-    "question": "この料金には、税金が<u>含まれて</u>います。",
-    "options": ["ふくまれて", "つつまれて", "めぐまれて", "のぞまれて"],
+    "question": "荷物を紙で<u>つつむ</u>。",
+    "options": ["包む", "含む", "込む", "組む"],
     "answer": 0,
-    "translation": "이 요금에는 세금이 포함되어 있습니다.",
+    "translation": "짐을 종이로 싸다(포장하다).",
     "explanation": {
-      "summary": "'含む'는 'ふくむ'로 읽으며 '포함하다'라는 의미입니다.",
-      "correct_logic": "수동형 '含まれる'의 형태입니다.",
+      "summary": "'싸다/포장하다'는 '包む'입니다.",
+      "correct_logic": "'쌀 포(包)'자를 사용합니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'包まれる(つつまれる)'는 '싸이다/포장되다'라는 의미입니다." },
-        { "option_idx": 2, "reason": "'恵まれる(めぐまれる)'는 '혜택받다/풍족하다'라는 의미입니다." },
-        { "option_idx": 3, "reason": "'望まれる(のぞまれる)'는 '바라다/기대되다'라는 의미입니다." }
+        { "option_idx": 1, "reason": "含む(ふくむ): 포함하다 (모양 유사)" },
+        { "option_idx": 2, "reason": "込む(こむ): 붐비다" },
+        { "option_idx": 3, "reason": "組む(くむ): 짜다/조직하다" }
       ],
-      "contrast": "含む(ふくむ) vs 含める(ふくめる)",
-      "examples": ["兄弟を含めて5人だ。", "水分を多く含む。"]
+      "examples": ["プレゼントを包む。", "オブラートに包む。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Semantic_Shape" },
-        { "option_idx": 2, "severity": "S2", "type": "Semantic_Context" },
-        { "option_idx": 3, "severity": "S1", "type": "Semantic_Sound" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate0_Kanji_Only", "Replaced_Type_Writing"] }
   },
   {
     "id": 9,
@@ -250,50 +199,36 @@
     "translation": "회의 한창 도중에 배가 울려 버렸다.",
     "explanation": {
       "summary": "어떤 일이 진행되는 바로 그 순간을 강조하는 '最中に'입니다.",
-      "correct_logic": "갑작스러운 사건(배가 울림)이 발생한 시점이 어떤 행위의 '한복판'임을 강조할 때 '最中(さいちゅう)に'를 씁니다.",
+      "correct_logic": "긴박한 사건이나 방해를 받는 상황에서 '最中(さいちゅう)に'를 씁니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'うちに'는 상태가 변하기 전의 기간을 나타냅니다 (식기 전에 먹어라 등)." },
-        { "option_idx": 2, "reason": "'あいだに'는 단순히 어떤 기간 내의 발생을 나타내며, 긴박감이나 '한창'이라는 뉘앙스는 약합니다." },
-        { "option_idx": 3, "reason": "'たびに'는 반복되는 일을 나타냅니다." }
+        { "option_idx": 1, "reason": "'うちに'는 상태 변화 전의 기간을 나타냅니다." },
+        { "option_idx": 2, "reason": "'あいだに'는 단순히 기간 내 발생을 의미하며 긴박감이 적습니다." },
+        { "option_idx": 3, "reason": "'たびに'는 반복을 나타냅니다." }
       ],
-      "contrast": "最中に(방해받은 느낌) vs あいだに(단순 기간)",
       "examples": ["電話している最中に切れた。", "食事の最中に客が来た。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Grammar_Time" },
-        { "option_idx": 2, "severity": "S3", "type": "Grammar_Time_Nuance" },
-        { "option_idx": 3, "severity": "S1", "type": "Grammar_Frequency" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 10,
-    "type": "vocab_context",
-    "instruction": "（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
+    "type": "vocab_paraphrase",
+    "instruction": "下線の言葉とだいたい同じ意味のものを、1・2・3・4から一つ選びなさい。",
     "passage": null,
-    "question": "彼は（　　　）な人柄で、誰からも好かれている。",
-    "options": ["温厚", "濃厚", "温暖", "温度"],
+    "question": "父は<u>年中</u>、ゴルフの話ばかりしている。",
+    "options": ["いつも", "ときどき", "たまに", "さいきん"],
     "answer": 0,
-    "translation": "그는 온후한 인품으로, 누구에게나 호감을 사고 있다.",
+    "translation": "아버지는 연중(늘), 골프 이야기만 하고 있다.",
     "explanation": {
-      "summary": "성품이 온화하고 후덕함을 나타내는 단어는 '温厚'입니다.",
-      "correct_logic": "사람의 성격을 묘사할 때 쓰는 '温厚(おんこう)'가 적절합니다.",
+      "summary": "'年中(ねんじゅう)'는 '항상, 언제나'라는 의미입니다.",
+      "correct_logic": "빈도를 나타내는 부사 중 'いつも(항상)'와 바꿔 쓸 수 있습니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'濃厚(のうこう)'는 맛이나 색, 가능성이 짙음을 의미합니다." },
-        { "option_idx": 2, "reason": "'温暖(おんだん)'은 기후가 따뜻함을 의미합니다." },
-        { "option_idx": 3, "reason": "'温度(おんど)'는 기온이나 물체의 차고 뜨거운 정도를 의미합니다." }
+        { "option_idx": 1, "reason": "ときどき: 가끔" },
+        { "option_idx": 2, "reason": "たまに: 어쩌다가" },
+        { "option_idx": 3, "reason": "さいきん: 최근" }
       ],
-      "contrast": "温厚(성격) vs 温暖(기후)",
-      "examples": ["温厚な性格。", "祖父は温厚な人だった。"]
+      "examples": ["年中無休(연중무휴).", "彼は年中怒っている。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Phonetic_Suffix" },
-        { "option_idx": 2, "severity": "S3", "type": "Semantic_Character_Conf" },
-        { "option_idx": 3, "severity": "S1", "type": "Phonetic_Prefix" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check", "Replaced_Type_Paraphrase"] }
   },
   {
     "id": 11,
@@ -306,16 +241,15 @@
     "translation": "저렇게나 연습했으니까, 그가 우승함에 틀림없다.",
     "explanation": {
       "summary": "확신을 나타내는 '～に違いない' 문형입니다.",
-      "correct_logic": "올바른 순서는 [1.彼が] → [0.優勝] → [2.する(★)] → [3.に] 입니다. '優勝する(우승하다)'라는 동사 뒤에 'に違いない'가 연결됩니다.",
+      "correct_logic": "올바른 순서는 [1.彼が] → [0.優勝] → [2.する(★)] → [3.に] 입니다.",
       "wrong_logics": [
         { "option_idx": 1, "reason": "배치 오류: '彼が'는 종속절의 주어이므로 맨 앞에 와야 합니다." },
         { "option_idx": 0, "reason": "결합 오류: '優勝'은 'する' 앞에 와서 동사구를 만들어야 합니다." },
         { "option_idx": 3, "reason": "배치 오류: 'に'는 '違いない' 바로 앞에 와서 문형을 완성해야 합니다." }
       ],
-      "contrast": "に違いない(강한 확신) vs かもしれない(추측)",
       "examples": ["彼が犯人に違いない。", "明日は晴れるに違いない。"]
     },
-    "meta": { "validated_by": ["Gate4", "Bidirectional", "No_Distractor"] }
+    "meta": { "validated_by": ["Gate3_Unique_Ordering"] }
   },
   {
     "id": 12,
@@ -334,16 +268,9 @@
         { "option_idx": 2, "reason": "'恐'를 'こう'로 잘못 읽었습니다." },
         { "option_idx": 3, "reason": "단음으로만 읽은 오답입니다." }
       ],
-      "contrast": "恐怖(きょうふ) vs 恐縮(きょうしゅく)",
       "examples": ["高所恐怖症。", "恐怖映画を見る。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Phonetic_VowelLength" },
-        { "option_idx": 2, "severity": "S2", "type": "Phonetic_Consonant" },
-        { "option_idx": 3, "severity": "S1", "type": "Phonetic_Combined" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate0_Hiragana_Only"] }
   },
   {
     "id": 13,
@@ -356,22 +283,15 @@
     "translation": "외국어는 연습하면 연습할수록 잘하게 된다.",
     "explanation": {
       "summary": "'～ば～ほど' (하면 할수록) 비례 변화 문형입니다.",
-      "correct_logic": "앞에는 가정형 '～ば', 뒤에는 '～ほど'를 사용하여 정도가 심해짐을 나타냅니다. '練習すれば'가 정답입니다.",
+      "correct_logic": "앞에는 가정형 '～ば'가 와야 합니다. '練習すれば'가 정답입니다.",
       "wrong_logics": [
         { "option_idx": 1, "reason": "'すると'는 이 문형에서 쓰이지 않습니다." },
         { "option_idx": 2, "reason": "'したら'는 이 문형에서 쓰이지 않습니다." },
         { "option_idx": 3, "reason": "'して'는 단순 연결형입니다." }
       ],
-      "contrast": "～ば～ほど(비례) vs ～ほど(정도)",
       "examples": ["考えれば考えるほどわからなくなる。", "早ければ早いほどいい。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Grammar_Conditional" },
-        { "option_idx": 2, "severity": "S2", "type": "Grammar_Conditional" },
-        { "option_idx": 3, "severity": "S1", "type": "Grammar_Form" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 14,
@@ -384,16 +304,15 @@
     "translation": "여동생이 테이블 위에 있는 케이크를 먹으려다 말고 역시 그만두었다.",
     "explanation": {
       "summary": "'～かけ' (동작의 도중/직전) 용법입니다.",
-      "correct_logic": "올바른 순서는 [1.妹が] → [0.食べ] → [2.かけて(★)] → [3.やっぱり] 입니다. '食べかける(먹다 말다/먹으려 하다)'라는 복합동사 구조입니다.",
+      "correct_logic": "올바른 순서는 [1.妹が] → [0.食べ] → [2.かけて(★)] → [3.やっぱり] 입니다. '食べかける' 복합동사 구조입니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "배치 오류: '妹が'는 주어로 문장의 맨 앞에 와야 합니다." },
-        { "option_idx": 0, "reason": "결합 오류: '食べ'는 'かけて' 앞에 와서 복합동사를 형성해야 합니다." },
-        { "option_idx": 3, "reason": "배치 오류: 'やっぱり'는 부사로 'やめた'를 수식하며 문맥상 마지막 빈칸에 위치합니다." }
+        { "option_idx": 1, "reason": "배치 오류: '妹が'는 주어이므로 맨 앞에 옵니다." },
+        { "option_idx": 0, "reason": "결합 오류: '食べ'는 'かけて' 앞에 옵니다." },
+        { "option_idx": 3, "reason": "배치 오류: 'やっぱり'는 부사로 마지막 빈칸에 옵니다." }
       ],
-      "contrast": "～かけ(중단/미완) vs ～たて(막 ~함)",
       "examples": ["読みかけの本。", "言いかけてやめる。"]
     },
-    "meta": { "validated_by": ["Gate4", "Bidirectional", "No_Distractor"] }
+    "meta": { "validated_by": ["Gate3_Unique_Ordering"] }
   },
   {
     "id": 15,
@@ -408,20 +327,13 @@
       "summary": "뜻하지 않게 만남을 나타내는 부사는 '偶然'입니다.",
       "correct_logic": "예기치 않게 일어난 일을 뜻하는 '偶然(ぐうぜん)'이 적절합니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'必然(ひつぜん)'은 반드시 그렇게 됨(필연)을 의미합니다." },
-        { "option_idx": 2, "reason": "'突然(とつぜん)'은 '갑자기'를 뜻하나, 친구와의 만남에는 '偶然'이 더 자연스럽습니다." },
-        { "option_idx": 3, "reason": "'当然(とうぜん)'은 '당연히'를 의미합니다." }
+        { "option_idx": 1, "reason": "'必然'은 필연을 의미합니다." },
+        { "option_idx": 2, "reason": "'突然'은 갑자기를 뜻하나, 문맥상 '偶然'이 더 자연스럽습니다." },
+        { "option_idx": 3, "reason": "'当然'은 당연히를 의미합니다." }
       ],
-      "contrast": "偶然(우연히) vs 突然(갑자기)",
       "examples": ["偶然同じ電車に乗った。", "偶然の一致。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Semantic_Antonym" },
-        { "option_idx": 2, "severity": "S3", "type": "Semantic_Nuance" },
-        { "option_idx": 3, "severity": "S1", "type": "Phonetic_Suffix" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 16,
@@ -434,22 +346,15 @@
     "translation": "일본어를 잘하고 싶다면, 좀 더 일본어를 말하는 것이다(말해야 한다).",
     "explanation": {
       "summary": "충고나 조언을 나타내는 '～ことだ' (~하는 것이 상책이다) 문형입니다.",
-      "correct_logic": "동사의 사전형(기본형)이나 부정형에 'ことだ'를 붙여, 그렇게 하는 것이 좋다는 조언을 나타냅니다. '話すことだ'가 정답입니다.",
+      "correct_logic": "동사의 사전형(기본형)이나 부정형에 'ことだ'를 붙여 조언을 나타냅니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "과거형 '話した'는 조언의 'ことだ'와 쓰이지 않습니다." },
-        { "option_idx": 2, "reason": "태형 '話して'는 명사 'こと'를 수식할 수 없습니다." },
-        { "option_idx": 3, "reason": "의지형 '話そう'는 명사 'こと'를 수식할 수 없습니다." }
+        { "option_idx": 1, "reason": "과거형 '話した'는 쓰이지 않습니다." },
+        { "option_idx": 2, "reason": "태형 '話して'는 연결되지 않습니다." },
+        { "option_idx": 3, "reason": "의지형 '話そう'는 연결되지 않습니다." }
       ],
-      "contrast": "～ことだ(조언) vs ～ものだ(일반적 진리/본성)",
       "examples": ["痩せたいなら、運動することだ。", "文句があるなら、直接言うことだ。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Grammar_Tense" },
-        { "option_idx": 2, "severity": "S1", "type": "Grammar_Form" },
-        { "option_idx": 3, "severity": "S1", "type": "Grammar_Form" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 17,
@@ -462,44 +367,35 @@
     "translation": "만약, 내일로 세계가 끝난다고 한다면 무엇을 하겠습니까?",
     "explanation": {
       "summary": "가정을 나타내는 '～としたら' 문형입니다.",
-      "correct_logic": "올바른 순서는 [3.で] → [0.世界が] → [1.終わる(★)] → [2.としたら] 입니다. '明日で(내일로써)'라는 부사구 뒤에 '世界が終わる(세계가 끝나다)'라는 문장이 오고, 마지막에 'としたら'가 붙습니다.",
+      "correct_logic": "올바른 순서는 [3.で] → [0.世界が] → [1.終わる(★)] → [2.としたら] 입니다. '明日で(내일로써)'라는 부사구가 핵심입니다.",
       "wrong_logics": [
-        { "option_idx": 3, "reason": "배치 오류: 'で'는 '明日' 뒤에 붙어 시간을 한정하는 조사로 쓰입니다." },
-        { "option_idx": 0, "reason": "배치 오류: '世界が'는 '終わる'의 주어로 그 앞에 위치해야 합니다." },
-        { "option_idx": 2, "reason": "배치 오류: 'としたら'는 가정 조건절의 맨 끝에 위치합니다." }
+        { "option_idx": 3, "reason": "배치 오류: 'で'는 '明日' 뒤에 붙어 시간을 한정합니다." },
+        { "option_idx": 0, "reason": "배치 오류: '世界が'는 '終わる'의 주어입니다." },
+        { "option_idx": 2, "reason": "배치 오류: 'としたら'는 가정 조건절의 맨 끝에 옵니다." }
       ],
-      "contrast": "としたら(가정) vs としても(양보)",
-      "examples": ["生まれ変われるとしたら、何になりたいですか。", "それが本当だとしたら、大問題だ。"]
+      "examples": ["生まれ変われるとしたら、何になりたいですか。"]
     },
-    "meta": { "validated_by": ["Gate4", "Bidirectional", "No_Distractor"] }
+    "meta": { "validated_by": ["Gate3_Unique_Ordering"] }
   },
   {
     "id": 18,
-    "type": "vocab_reading",
-    "instruction": "下線の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。",
-    "passage": null,
-    "question": "寄付を<u>募る</u>。",
-    "options": ["つのる", "まつる", "はかる", "さぐる"],
-    "answer": 0,
-    "translation": "기부를 모집하다.",
+    "type": "reading_info",
+    "instruction": "次の案内を見て、質問に答えなさい。",
+    "passage": "| コース | 時間 | 料金 |\n|---|---|---|\n| Aコース | 60分 | 3,000円 |\n| Bコース | 90分 | 4,000円 |\n※ 初めて利用する人は、すべてのコースが500円引きになります。",
+    "question": "初めてこの店を利用する人が、Bコースを選びました。いくらですか。",
+    "options": ["2,500円", "3,500円", "4,000円", "4,500円"],
+    "answer": 1,
+    "translation": "첫 이용(500엔 할인) + B코스(4,000엔) = 3,500엔.",
     "explanation": {
-      "summary": "'募る'는 'つのる'로 읽으며 '모집하다, 더해지다'를 의미합니다.",
-      "correct_logic": "사람이나 돈을 모을 때 쓰는 동사입니다.",
+      "summary": "표의 가격 정보와 하단의 할인 조건을 결합해야 합니다.",
+      "correct_logic": "B코스는 4,000엔이지만, '처음 이용(初めて)' 조건에 해당하므로 500엔 할인을 적용해 3,500엔이 됩니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'祭る(まつる)'는 '제사 지내다/축제하다'입니다." },
-        { "option_idx": 2, "reason": "'測る(はかる)'는 '재다/측정하다'입니다." },
-        { "option_idx": 3, "reason": "'探る(さぐる)'는 '살피다/더듬다'입니다." }
+        { "option_idx": 0, "reason": "A코스 요금에 할인을 적용한 오답" },
+        { "option_idx": 2, "reason": "할인 조건을 놓친 오답" }
       ],
-      "contrast": "募る(つのる-모으다/격해지다) vs 集める(あつめる-모으다)",
-      "examples": ["会員を募る。", "不安が募る。"]
+      "examples": []
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S2", "type": "Semantic_Shape" },
-        { "option_idx": 2, "severity": "S2", "type": "Semantic_Context" },
-        { "option_idx": 3, "severity": "S1", "type": "Semantic_Meaning" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate4_Info_Logic", "Replaced_Type_Reading_Info"] }
   },
   {
     "id": 19,
@@ -512,21 +408,14 @@
     "translation": "텔레비전을 켜 둔 채로 잠들어 버렸다.",
     "explanation": {
       "summary": "'～っぱなし' (방치함/부정적 뉘앙스) 용법입니다.",
-      "correct_logic": "'つけっぱなし'는 켜둔 상태로 방치했다는 의미가 강해, 실수로 잠든 상황과 잘 어울립니다. 'つけっぱなしで'가 가장 적절합니다.",
+      "correct_logic": "'つけっぱなしで'가 가장 적절합니다. 실수로 방치했다는 뉘앙스입니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'つけたまま'도 가능하나, 'っぱなし'가 가진 '방치/소홀함'의 뉘앙스가 문맥(실수)과 더 잘 어울립니다." },
-        { "option_idx": 2, "reason": "'つけながら'는 '켜면서'라는 뜻으로 잠든 것과는 모순됩니다." },
-        { "option_idx": 3, "reason": "'つけとおりに'는 올바른 일본어 표현이 아닙니다." }
+        { "option_idx": 1, "reason": "'つけたまま'는 뉘앙스가 중립적이어서 '실수'의 문맥과 덜 어울립니다." },
+        { "option_idx": 2, "reason": "'つけながら'는 '켜면서'라는 뜻으로 모순됩니다." },
+        { "option_idx": 3, "reason": "'つけとおりに'는 비문입니다." }
       ],
-      "contrast": "っぱなし(방치/불쾌) vs まま(상태 유지/중립)",
       "examples": ["ドアを開けっぱなしにする。", "服を脱ぎっぱなしにする。"]
     },
-    "meta": {
-      "distractor_analysis": [
-        { "option_idx": 1, "severity": "S3", "type": "Semantic_Nuance" },
-        { "option_idx": 2, "severity": "S2", "type": "Grammar_Aspect" },
-        { "option_idx": 3, "severity": "S1", "type": "Grammar_Form" }
-      ]
-    }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   }
 ]
