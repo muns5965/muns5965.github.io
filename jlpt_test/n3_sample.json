@@ -33,9 +33,9 @@
       "summary": "널리 퍼져 쓰이게 됨을 뜻하는 단어는 '普及'입니다.",
       "correct_logic": "기술이나 제품이 사회 전반에 퍼지는 것을 '普及(ふきゅう)'라고 합니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'追及(ついきゅう)'는 책임 등을 끝까지 쫓아 따진다는 의미입니다." },
-        { "option_idx": 2, "reason": "'高級(こうきゅう)'는 품질이나 지위가 높음을 의미합니다." },
-        { "option_idx": 3, "reason": "'階級(かいきゅう)'는 신분이나 지위의 등급을 의미합니다." }
+        { "option_idx": 1, "reason": "'追及'는 책임 등을 추궁한다는 의미입니다." },
+        { "option_idx": 2, "reason": "'高級'는 품질이 높음(고급)을 의미합니다." },
+        { "option_idx": 3, "reason": "'階級'는 신분(계급)을 의미합니다." }
       ],
       "examples": ["インターネットが普及する。", "省エネ製品の普及。"]
     },
@@ -52,7 +52,7 @@
     "translation": "이 곡을 들을 때마다, 학창 시절이 생각난다.",
     "explanation": {
       "summary": "'～할 때마다 항상'이라는 의미의 '～たびに' 문형입니다.",
-      "correct_logic": "어떤 행위를 할 때마다 같은 결과가 일어남을 나타낼 때 사용합니다.",
+      "correct_logic": "어떤 행위를 할 때마다 같은 결과가 반복됨을 나타냅니다.",
       "wrong_logics": [
         { "option_idx": 1, "reason": "'ついでに'는 '하는 김에'라는 의미입니다." },
         { "option_idx": 2, "reason": "'最中に'는 '한창 ~하는 중에'라는 의미입니다." },
@@ -75,9 +75,9 @@
       "summary": "정도나 감정을 강조하는 '～てしかたがない' 문형입니다.",
       "correct_logic": "올바른 순서는 [3.とても] → [2.うるさくて] → [0.気に(★)] → [1.なって] 입니다.",
       "wrong_logics": [
-        { "option_idx": 3, "reason": "배치 오류: 'とても'는 형용사 'うるさくて'를 수식하므로 맨 앞에 옵니다." },
-        { "option_idx": 2, "reason": "배치 오류: 'うるさくて'는 '気になって'의 원인이므로 그 앞에 옵니다." },
-        { "option_idx": 1, "reason": "결합 오류: 'なって'는 '気に' 뒤에 붙어 관용구 '気になる'를 형성해야 합니다." }
+        { "option_idx": 3, "reason": "배치 오류: 'とても'는 형용사 'うるさくて'를 수식합니다." },
+        { "option_idx": 2, "reason": "배치 오류: 'うるさくて'는 '気になって'의 원인입니다." },
+        { "option_idx": 1, "reason": "결합 오류: 'なって'는 '気に'와 결합해 '気になる'가 됩니다." }
       ],
       "examples": ["お腹が空いてしかたがない。", "眠くてしかたがない。"]
     },
@@ -97,12 +97,12 @@
       "correct_logic": "특별한 읽기(숙자훈)에 해당하므로 주의해야 합니다.",
       "wrong_logics": [
         { "option_idx": 1, "reason": "탁음화 오류: 'し'가 'じ'로 변하지 않습니다." },
-        { "option_idx": 2, "reason": "훈독 오류: 한자 표기를 뺀 순수 히라가나 오답입니다." },
-        { "option_idx": 3, "reason": "음독 오류: 일반적인 음독 규칙(度-とう)을 잘못 적용한 오답입니다." }
+        { "option_idx": 2, "reason": "훈독 오용: 한자의 훈독 'ど'를 잘못 적용한, 존재하지 않는 읽기입니다." },
+        { "option_idx": 3, "reason": "음독 오용: 일반적인 음독 규칙(度-とう)을 잘못 적용한 오답입니다." }
       ],
       "examples": ["食事の支度。", "冬の支度。"]
     },
-    "meta": { "validated_by": ["Gate0_Hiragana_Only", "Corrected_Logic"] }
+    "meta": { "validated_by": ["Gate0_Hiragana_Only", "Explanation_Refined"] }
   },
   {
     "id": 5,
@@ -115,15 +115,15 @@
     "translation": "중요한 회의가 있어서, 열이 있어도 쉴 수는 없다.",
     "explanation": {
       "summary": "'～わけにはいかない' (사회적/심리적 이유로 ~할 수 없다) 문형입니다.",
-      "correct_logic": "부정의 의미를 만들기 위해 동사 사전형(기본형) '休む'에 연결합니다.",
+      "correct_logic": "문형 자체가 '불가능'을 나타내므로, 동사 사전형 '休む'에 연결하여 '쉴 수는 없다'는 의미를 만듭니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'休まない'와 결합하면 의미가 반대가 됩니다." },
+        { "option_idx": 1, "reason": "'休まない'와 결합하면 '쉬지 않을 수는 없다(꼭 쉬어야 한다)'가 되어 문맥과 모순됩니다." },
         { "option_idx": 2, "reason": "과거형 '休んだ'와 결합하면 시제가 맞지 않습니다." },
         { "option_idx": 3, "reason": "태형 '休んで'는 연결되지 않습니다." }
       ],
       "examples": ["先輩の命令だから、断るわけにはいかない。", "明日テストがあるから、寝るわけにはいかない。"]
     },
-    "meta": { "validated_by": ["Gate2_Level_Check"] }
+    "meta": { "validated_by": ["Gate2_Level_Check", "Explanation_Refined"] }
   },
   {
     "id": 6,
@@ -186,7 +186,7 @@
       ],
       "examples": ["プレゼントを包む。", "オブラートに包む。"]
     },
-    "meta": { "validated_by": ["Gate0_Kanji_Only", "Replaced_Type_Writing"] }
+    "meta": { "validated_by": ["Gate0_Kanji_Only"] }
   },
   {
     "id": 9,
@@ -228,7 +228,7 @@
       ],
       "examples": ["年中無休(연중무휴).", "彼は年中怒っている。"]
     },
-    "meta": { "validated_by": ["Gate2_Level_Check", "Replaced_Type_Paraphrase"] }
+    "meta": { "validated_by": ["Gate2_Level_Check"] }
   },
   {
     "id": 11,
@@ -395,7 +395,7 @@
       ],
       "examples": []
     },
-    "meta": { "validated_by": ["Gate4_Info_Logic", "Replaced_Type_Reading_Info"] }
+    "meta": { "validated_by": ["Gate4_Info_Logic"] }
   },
   {
     "id": 19,
@@ -403,19 +403,19 @@
     "instruction": "（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。",
     "passage": null,
     "question": "テレビを（　　　）寝てしまった。",
-    "options": ["つけっぱなしで", "つけたまま", "つけながら", "つけとおりに"],
+    "options": ["つけっぱなしで", "ついて", "つけながら", "つけとおりに"],
     "answer": 0,
     "translation": "텔레비전을 켜 둔 채로 잠들어 버렸다.",
     "explanation": {
       "summary": "'～っぱなし' (방치함/부정적 뉘앙스) 용법입니다.",
       "correct_logic": "'つけっぱなしで'가 가장 적절합니다. 실수로 방치했다는 뉘앙스입니다.",
       "wrong_logics": [
-        { "option_idx": 1, "reason": "'つけたまま'는 뉘앙스가 중립적이어서 '실수'의 문맥과 덜 어울립니다." },
+        { "option_idx": 1, "reason": "자동사 오용: 타동사 목적어(を) 뒤에 자동사(ついて)가 올 수 없습니다. (명백한 문법 오류)" },
         { "option_idx": 2, "reason": "'つけながら'는 '켜면서'라는 뜻으로 모순됩니다." },
         { "option_idx": 3, "reason": "'つけとおりに'는 비문입니다." }
       ],
       "examples": ["ドアを開けっぱなしにする。", "服を脱ぎっぱなしにする。"]
     },
-    "meta": { "validated_by": ["Gate2_Level_Check"] }
+    "meta": { "validated_by": ["Gate2_Level_Check", "Fix_Ambiguity"] }
   }
 ]
