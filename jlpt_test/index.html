@@ -480,8 +480,8 @@
                     <span id="k-title" style="font-weight:800; font-size:1.2rem; color:var(--text-main);"></span>
                     
                     <div class="source-group">
-                        <a href="https://github.com/Usejun/Kanji" target="_blank" class="source-badge" aria-label="데이터 출처: Usejun/Kanji">
-                            github.com/Usejun/Kanji
+                        <a href="https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json" target="_blank" class="source-badge" aria-label="한국식 한자 음훈 데이터 출처">
+                            Korean Hanja JSON
                         </a>
                         <a href="https://kanjiapi.dev/" target="_blank" class="source-badge reading-source" aria-label="KanjiAPI 공식 사이트">Loading...</a>
                     </div>
@@ -617,7 +617,8 @@
         const QuizApp = (function() {
             const STORAGE_KEY = 'jlpt_engine_data_master';
             const STATE_KEY = 'jlpt_engine_state_master';
-            const KOR_DATA_KEY = 'jlpt_kanji_kor_v1';
+            const KOR_DATA_KEY = 'jlpt_kanji_kor_v2';
+            const KOR_DATA_URL = 'https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json';
             let _lastFocusedElement = null; 
             
             const SAMPLE_N3 = [{"id":0,"type":"vocab_reading","instruction":"読み方を選びなさい。","question":"週末は<u class='underline'>幸せ</u>だった。","options":["しあわせ","さいわい","ふしあわせ","しあわ"],"answer":0,"translation":"주말은 행복했다.","explanation":{"correct_logic":"‘幸’는 훈독으로 ‘しあわせ’입니다."}},{"id":1,"type":"grammar","instruction":"（　）に入れるのに最もよいものを一つ選びなさい。","question":"努力した（　）、合格した。","options":["末に","あまり","あげく","ばかり"],"answer":0,"translation":"노력한 끝에 합격했다.","explanation":{"correct_logic":"‘～た末に’는 ‘~한 끝에’라는 긍정적 결말에 쓰입니다."}}];
@@ -688,32 +689,54 @@
                     return false;
                 },
 
+                formatKoreanItem(item) {
+                    if (!item || !item.kanji) return '-';
+
+                    const baseKanji = item.kanji;
+                    const koreanHanja = item.korean_hanja || baseKanji;
+                    const hanjaPart = koreanHanja && koreanHanja !== baseKanji
+                        ? `${baseKanji} / ${koreanHanja}`
+                        : baseKanji;
+
+                    const eumhunPart = (item.korean_eumhun || [])
+                        .map(x => {
+                            const hun = (x.hun || '').trim();
+                            const eum = (x.eum || '').trim();
+                            return `${hun} ${eum}`.trim();
+                        })
+                        .filter(Boolean)
+                        .join(', ');
+
+                    return eumhunPart ? `${hanjaPart} · ${eumhunPart}` : hanjaPart;
+                },
+
                 async loadFromNetwork() {
-                    console.log("[Preload] Fetching from Network...");
+                    console.log("[Preload] Fetching Korean Hanja JSON...", KOR_DATA_URL);
                     try {
-                        const [kanjiRes, korRes] = await Promise.all([
-                            fetch('https://raw.githubusercontent.com/Usejun/Kanji/main/kanji.txt'),
-                            fetch('https://raw.githubusercontent.com/Usejun/Kanji/main/korean.txt')
-                        ]);
+                        const res = await fetch(KOR_DATA_URL, { cache: 'no-cache' });
+                        if (!res.ok) throw new Error(`Korean Hanja JSON load failed: ${res.status}`);
 
-                        if (!kanjiRes.ok || !korRes.ok) throw new Error("Network error");
-
-                        const [kanjiText, korText] = await Promise.all([
-                            kanjiRes.text(), korRes.text()
-                        ]);
-                        
-                        const kanjis = kanjiText.split('\n').map(s => s.trim()).filter(Boolean);
-                        const kors = korText.split('\n').map(s => s.trim()).filter(Boolean);
+                        const payload = await res.json();
+                        const items = Array.isArray(payload) ? payload : (payload.items || []);
+                        if (!Array.isArray(items) || items.length === 0) {
+                            throw new Error("Korean Hanja JSON has no items array");
+                        }
                         
                         this._koreanMap = new Map();
-                        kanjis.forEach((k, i) => {
-                            if (kors[i]) this._koreanMap.set(k, kors[i].replace(/\//g, ', '));
+                        items.forEach(item => {
+                            const display = this.formatKoreanItem(item);
+                            if (!display || display === '-') return;
+
+                            if (item.kanji) this._koreanMap.set(item.kanji, display);
+                            if (item.korean_hanja && item.korean_hanja !== item.kanji) {
+                                this._koreanMap.set(item.korean_hanja, display);
+                            }
                         });
 
                         if (!this._storageDisabled) {
                             try {
                                 localStorage.setItem(KOR_DATA_KEY, JSON.stringify(Object.fromEntries(this._koreanMap)));
-                                console.log("[Preload] Saved to LocalStorage");
+                                console.log("[Preload] Saved Korean Hanja map to LocalStorage", this._koreanMap.size);
                             } catch (e) { 
                                 console.warn("[Preload] Storage Quota Exceeded.");
                                 this._storageDisabled = true;
