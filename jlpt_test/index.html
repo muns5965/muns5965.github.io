@@ -187,7 +187,7 @@
             z-index: 1; /* 밑줄보다 위로 */
             will-change: transform;
             touch-action: manipulation; -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none; user-select: none; outline: none;
+            -webkit-user-select: text; user-select: text; outline: none;
             transition: all 0.15s cubic-bezier(0.2, 0, 0.2, 1);
         }
         @media (hover: hover) {
@@ -480,7 +480,7 @@
                     <span id="k-title" style="font-weight:800; font-size:1.2rem; color:var(--text-main);"></span>
                     
                     <div class="source-group">
-                        <a href="https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json" target="_blank" class="source-badge" aria-label="한국식 한자 음훈 데이터 출처">
+                        <a href="https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json" target="_blank" class="source-badge" aria-label="한국 한자 음훈 데이터 출처">
                             Korean Hanja JSON
                         </a>
                         <a href="https://kanjiapi.dev/" target="_blank" class="source-badge reading-source" aria-label="KanjiAPI 공식 사이트">Loading...</a>
@@ -548,8 +548,8 @@
     <div id="kanjiGeneratorPool"></div>
 
     <script>
-        const KANJI_TEST = /[\u4E00-\u9FFF]/; 
-        const KANJI_GLOBAL = /[\u4E00-\u9FFF]/g;
+        const KANJI_TEST = /[\p{Script=Han}]/u; 
+        const KANJI_GLOBAL = /[\p{Script=Han}]/gu;
 
         const IDB = {
             dbName: 'jlpt_kanji_svg_v1',
@@ -617,7 +617,7 @@
         const QuizApp = (function() {
             const STORAGE_KEY = 'jlpt_engine_data_master';
             const STATE_KEY = 'jlpt_engine_state_master';
-            const KOR_DATA_KEY = 'jlpt_kanji_kor_v2';
+            const KOR_DATA_KEY = 'jlpt_kanji_kor_v4';
             const KOR_DATA_URL = 'https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json';
             let _lastFocusedElement = null; 
             
@@ -667,8 +667,15 @@
                 },
 
                 getKorean(char) {
-                    if (!this._koreanMap) return '-'; 
-                    return this._koreanMap.get(char) || '-';
+                    if (!this._koreanMap) return '-';
+
+                    const item = this._koreanMap.get(char);
+                    if (!item) return '-';
+
+                    // 예전 localStorage 캐시가 남아 있는 경우 방어
+                    if (typeof item === 'string') return item;
+
+                    return this.formatKoreanItem(item);
                 },
                 
                 async loadFromStorage() {
@@ -694,20 +701,26 @@
 
                     const baseKanji = item.kanji;
                     const koreanHanja = item.korean_hanja || baseKanji;
-                    const hanjaPart = koreanHanja && koreanHanja !== baseKanji
-                        ? `${baseKanji} / ${koreanHanja}`
-                        : baseKanji;
 
                     const eumhunPart = (item.korean_eumhun || [])
                         .map(x => {
                             const hun = (x.hun || '').trim();
                             const eum = (x.eum || '').trim();
-                            return `${hun} ${eum}`.trim();
+                            return hun ? `${hun} ${eum}`.trim() : eum;
                         })
                         .filter(Boolean)
                         .join(', ');
 
-                    return eumhunPart ? `${hanjaPart} · ${eumhunPart}` : hanjaPart;
+                    const meaningPart = eumhunPart || '-';
+
+                    // 상단 제목에 일본식 한자가 이미 표시되므로,
+                    // 자형이 다른 경우에만 뜻 뒤에 한국 표기를 보조 표기한다.
+                    const variantPart =
+                        koreanHanja && koreanHanja !== baseKanji
+                            ? ` (한국 표기: ${koreanHanja})`
+                            : '';
+
+                    return `${meaningPart}${variantPart}`;
                 },
 
                 async loadFromNetwork() {
@@ -724,12 +737,20 @@
                         
                         this._koreanMap = new Map();
                         items.forEach(item => {
-                            const display = this.formatKoreanItem(item);
-                            if (!display || display === '-') return;
+                            if (!item || !item.kanji) return;
 
-                            if (item.kanji) this._koreanMap.set(item.kanji, display);
-                            if (item.korean_hanja && item.korean_hanja !== item.kanji) {
-                                this._koreanMap.set(item.korean_hanja, display);
+                            const normalized = {
+                                kanji: item.kanji,
+                                korean_hanja: item.korean_hanja || item.kanji,
+                                korean_eumhun: Array.isArray(item.korean_eumhun) ? item.korean_eumhun : []
+                            };
+
+                            // 표시 문자열이 아니라 원본 객체를 저장한다.
+                            // 화면 출력 형식이 바뀌어도 데이터 캐시를 재가공할 필요가 없다.
+                            this._koreanMap.set(normalized.kanji, normalized);
+
+                            if (normalized.korean_hanja && normalized.korean_hanja !== normalized.kanji) {
+                                this._koreanMap.set(normalized.korean_hanja, normalized);
                             }
                         });
 
@@ -801,7 +822,7 @@
             };
 
             const Session = {
-                data: [], currIdx: 0, score: 0, solvedCount: 0, currentOrder: [], isLocked: false, history: null,
+                data: [], currIdx: 0, score: 0, solvedCount: 0, currentOrder: [], orderHistory: null, isLocked: false, history: null,
                 
                 resetState: function() {
                     try {
@@ -835,12 +856,16 @@
                             if (state.history && state.currIdx !== undefined) {
                                 if (Array.isArray(state.history) && state.history.length === data.length) {
                                     this.history = state.history;
+                                    this.orderHistory = Array.isArray(state.orderHistory) && state.orderHistory.length === data.length
+                                        ? state.orderHistory
+                                        : new Array(data.length).fill(null);
                                     this.currIdx = state.currIdx;
                                     this.score = this.history.filter(h => h?.isCorrect === true).length;
                                     this.solvedCount = this.history.filter(h => h !== null).length;
                                 } else {
                                     console.warn("History mismatch. Resetting history.");
                                     this.history = new Array(data.length).fill(null);
+                                    this.orderHistory = new Array(data.length).fill(null);
                                     this.currIdx = 0;
                                 }
                             }
@@ -875,7 +900,13 @@
                     }
                     this.resetState();
                     const q = this.data[this.currIdx];
-                    this.currentOrder = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+                    if (!this.orderHistory || this.orderHistory.length !== this.data.length) {
+                        this.orderHistory = new Array(this.data.length).fill(null);
+                    }
+                    if (!Array.isArray(this.orderHistory[this.currIdx])) {
+                        this.orderHistory[this.currIdx] = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+                    }
+                    this.currentOrder = this.orderHistory[this.currIdx];
                     UI.drawQuestion(q, this.currIdx);
                     document.getElementById('qText').focus();
                     UI.drawOptions(q, this.currentOrder);
@@ -919,7 +950,7 @@
                     this.solvedCount++;
                     if(isCorrect) this.score++;
                     
-                    localStorage.setItem(STATE_KEY, JSON.stringify({ currIdx: this.currIdx, history: this.history }));
+                    localStorage.setItem(STATE_KEY, JSON.stringify({ currIdx: this.currIdx, history: this.history, orderHistory: this.orderHistory }));
                     
                     const btns = document.querySelectorAll('.option-btn');
                     const correctDisplayIdx = this.currentOrder.indexOf(q.answer);
@@ -950,19 +981,21 @@
                 loadSample: function(type) {
                     const data = type === 'n3' ? SAMPLE_N3 : SAMPLE_N2;
                     this.history = new Array(data.length).fill(null);
+                    this.orderHistory = new Array(data.length).fill(null);
                     this.score = 0; this.solvedCount = 0;
                     this.bootstrap(data);
                 },
                 bootstrap: function(json) {
                     if (!json || !Array.isArray(json) || json.length === 0) throw new Error("유효하지 않은 데이터");
                     this.history = new Array(json.length).fill(null);
+                    this.orderHistory = new Array(json.length).fill(null);
                     this.score = 0; this.solvedCount = 0;
                     this.data = json; this.currIdx = 0; this.isLocked = false; this.currentOrder = [];
                     document.getElementById('stateLayer').style.display = 'none';
                     document.getElementById('quizInterface').style.display = 'block';
                     UI.updateJumpSelect(); this.resetState(); this.render();
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(json));
-                    localStorage.setItem(STATE_KEY, JSON.stringify({ currIdx: 0, history: this.history }));
+                    localStorage.setItem(STATE_KEY, JSON.stringify({ currIdx: 0, history: this.history, orderHistory: this.orderHistory }));
                 }
             };
 
@@ -1070,12 +1103,24 @@
 
                 drawOptions: function(q, order) {
                     const grid = document.getElementById('options');
-                    grid.innerHTML = order.map((origIdx, dispIdx) => `
-                        <button class="option-btn" data-disp="${dispIdx}" data-orig="${origIdx}" aria-label="${dispIdx+1}번 선택지">
-                            <span class="opt-num">${dispIdx + 1}</span>
-                            ${q.options[origIdx]}
-                        </button>
-                    `).join('');
+                    grid.innerHTML = '';
+
+                    order.forEach((origIdx, dispIdx) => {
+                        const btn = document.createElement('button');
+                        btn.className = 'option-btn';
+                        btn.dataset.disp = String(dispIdx);
+                        btn.dataset.orig = String(origIdx);
+                        btn.setAttribute('aria-label', `${dispIdx + 1}번 선택지`);
+
+                        const num = document.createElement('span');
+                        num.className = 'opt-num';
+                        num.textContent = String(dispIdx + 1);
+
+                        btn.appendChild(num);
+                        btn.appendChild(document.createTextNode(q.options?.[origIdx] ?? ''));
+
+                        grid.appendChild(btn);
+                    });
                 },
                 prepareExplanation: function(q, order) {
                     document.getElementById('transText').innerText = q.translation || '-';
@@ -1207,7 +1252,7 @@
                 resetData: function() {
                     if(confirm("⚠️ 모든 데이터를 삭제하시겠습니까?")) {
                         localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(STATE_KEY);
-                        Session.data = []; Session.history = null;
+                        Session.data = []; Session.history = null; Session.orderHistory = null;
                         this.closeModal('settingModal'); this.toast('delete', '모든 데이터가 초기화되었습니다', 'wrong');
                         document.getElementById('quizInterface').style.display = 'none'; document.getElementById('emptyView').style.display = 'block';
                     }
@@ -1231,8 +1276,7 @@
                         
                         const fragment = document.createDocumentFragment();
                         const text = node.textContent;
-                        for(let i=0; i<text.length; i++) {
-                            const char = text[i];
+                        for (const char of text) {
                             if(KANJI_TEST.test(char)) {
                                 const span = document.createElement('span');
                                 span.className = 'kanji-clickable';
@@ -1241,10 +1285,10 @@
                                 span.setAttribute('role', 'button');
                                 span.setAttribute('aria-label', `한자 ${char} 상세 정보 보기`);
                                 
-                                span.onclick = (e) => {
+                                span.addEventListener('click', (e) => {
                                     _lastFocusedElement = e.currentTarget;
                                     this.openKanji(char);
-                                };
+                                });
                                 span.addEventListener('keydown', (e) => {
                                     if(e.key === 'Enter' || e.key === ' ') {
                                         e.preventDefault();
