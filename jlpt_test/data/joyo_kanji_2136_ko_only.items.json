@@ -90,7 +90,7 @@
     "korean_eumhun": [
       {
         "eum": "부",
-        "hun": null
+        "hun": "아닐"
       }
     ]
   },
@@ -187,7 +187,7 @@
     "korean_eumhun": [
       {
         "eum": "곶",
-        "hun": null
+        "hun": "곶"
       }
     ]
   },
@@ -231,7 +231,7 @@
     "korean_eumhun": [
       {
         "eum": "정",
-        "hun": null
+        "hun": "우물"
       }
     ]
   },
@@ -711,7 +711,7 @@
     "korean_eumhun": [
       {
         "eum": "벌",
-        "hun": "칠[討]"
+        "hun": "칠"
       }
     ]
   },
@@ -1115,7 +1115,7 @@
     "korean_eumhun": [
       {
         "eum": "봉",
-        "hun": "녹(祿)"
+        "hun": "녹"
       }
     ]
   },
@@ -1421,7 +1421,7 @@
     "korean_eumhun": [
       {
         "eum": "동",
-        "hun": null
+        "hun": "일할"
       }
     ]
   },
@@ -1481,7 +1481,7 @@
     "korean_eumhun": [
       {
         "eum": "억",
-        "hun": "억[數字]"
+        "hun": "억"
       }
     ]
   },
@@ -1779,7 +1779,7 @@
       },
       {
         "eum": "용",
-        "hun": "번잡할[宂]"
+        "hun": "번잡할"
       }
     ]
   },
@@ -1941,7 +1941,7 @@
     "korean_eumhun": [
       {
         "eum": "출",
-        "hun": "날[生]"
+        "hun": "날"
       }
     ]
   },
@@ -2296,7 +2296,7 @@
     "korean_eumhun": [
       {
         "eum": "공",
-        "hun": "공[勳]"
+        "hun": "공"
       }
     ]
   },
@@ -2514,7 +2514,7 @@
     "korean_eumhun": [
       {
         "eum": "훈",
-        "hun": "공(功)"
+        "hun": "공"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -2535,7 +2535,7 @@
     "korean_eumhun": [
       {
         "eum": "내",
-        "hun": null
+        "hun": "향내"
       }
     ]
   },
@@ -2545,7 +2545,7 @@
     "korean_eumhun": [
       {
         "eum": "포",
-        "hun": "쌀[裹]"
+        "hun": "쌀"
       }
     ]
   },
@@ -2675,7 +2675,7 @@
     "korean_eumhun": [
       {
         "eum": "반",
-        "hun": "반(半)"
+        "hun": "반"
       }
     ]
   },
@@ -2821,7 +2821,7 @@
     "korean_eumhun": [
       {
         "eum": "사",
-        "hun": null
+        "hun": "풀"
       }
     ]
   },
@@ -2841,11 +2841,11 @@
     "korean_eumhun": [
       {
         "eum": "리",
-        "hun": "다스릴[釐]"
+        "hun": "다스릴"
       },
       {
         "eum": "전",
-        "hun": "가게[廛]"
+        "hun": "가게"
       }
     ]
   },
@@ -3079,7 +3079,7 @@
     "korean_eumhun": [
       {
         "eum": "사",
-        "hun": "사기(史記)"
+        "hun": "사기"
       }
     ]
   },
@@ -3124,7 +3124,7 @@
       },
       {
         "eum": "우",
-        "hun": "오른(쪽)"
+        "hun": "오른"
       }
     ]
   },
@@ -3292,7 +3292,7 @@
     "korean_eumhun": [
       {
         "eum": "려",
-        "hun": "성(姓)"
+        "hun": "성"
       },
       {
         "eum": "려",
@@ -3316,7 +3316,7 @@
     "korean_eumhun": [
       {
         "eum": "오",
-        "hun": null
+        "hun": "나라 이름"
       }
     ]
   },
@@ -3396,7 +3396,7 @@
     "korean_eumhun": [
       {
         "eum": "소",
-        "hun": null
+        "hun": "웃음"
       }
     ]
   },
@@ -3538,7 +3538,7 @@
     "korean_eumhun": [
       {
         "eum": "타",
-        "hun": "침[涎]"
+        "hun": "침"
       }
     ]
   },
@@ -3689,7 +3689,7 @@
     "korean_eumhun": [
       {
         "eum": "탄",
-        "hun": "한숨쉴[歎]"
+        "hun": "한숨쉴"
       }
     ]
   },
@@ -3740,7 +3740,7 @@
     "korean_eumhun": [
       {
         "eum": "하",
-        "hun": null
+        "hun": "웃음소리"
       }
     ]
   },
@@ -3854,7 +3854,7 @@
     "korean_eumhun": [
       {
         "eum": "권",
-        "hun": "우리[牢]"
+        "hun": "우리"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -3956,7 +3956,7 @@
     "korean_eumhun": [
       {
         "eum": "평",
-        "hun": "들[野]"
+        "hun": "들"
       }
     ]
   },
@@ -4172,7 +4172,7 @@
     "korean_eumhun": [
       {
         "eum": "병",
-        "hun": null
+        "hun": "담"
       }
     ]
   },
@@ -4242,7 +4242,7 @@
     "korean_eumhun": [
       {
         "eum": "새",
-        "hun": null
+        "hun": "변방"
       }
     ]
   },
@@ -4365,7 +4365,7 @@
     "korean_eumhun": [
       {
         "eum": "양",
-        "hun": null
+        "hun": "흙덩이"
       }
     ]
   },
@@ -4634,7 +4634,7 @@
     "korean_eumhun": [
       {
         "eum": "장",
-        "hun": null
+        "hun": "장려할"
       }
     ]
   },
@@ -4855,7 +4855,7 @@
     "korean_eumhun": [
       {
         "eum": "진",
-        "hun": null
+        "hun": "삼갈"
       }
     ]
   },
@@ -4915,7 +4915,7 @@
     "korean_eumhun": [
       {
         "eum": "오",
-        "hun": null
+        "hun": "즐길"
       }
     ]
   },
@@ -5025,7 +5025,7 @@
     "korean_eumhun": [
       {
         "eum": "양",
-        "hun": null
+        "hun": "아가씨"
       }
     ]
   },
@@ -5126,7 +5126,7 @@
     "korean_eumhun": [
       {
         "eum": "택",
-        "hun": null
+        "hun": "집"
       }
     ]
   },
@@ -5328,7 +5328,7 @@
     "korean_eumhun": [
       {
         "eum": "소",
-        "hun": "밤[夜]"
+        "hun": "밤"
       }
     ]
   },
@@ -5484,7 +5484,7 @@
     "korean_eumhun": [
       {
         "eum": "료",
-        "hun": "동관(同官)"
+        "hun": "동관"
       }
     ]
   },
@@ -5638,7 +5638,7 @@
     "korean_eumhun": [
       {
         "eum": "상",
-        "hun": null
+        "hun": "오히려"
       }
     ]
   },
@@ -5699,7 +5699,7 @@
     "korean_eumhun": [
       {
         "eum": "국",
-        "hun": "판[形局]"
+        "hun": "판"
       }
     ]
   },
@@ -5749,7 +5749,7 @@
     "korean_eumhun": [
       {
         "eum": "계",
-        "hun": "이를[至]"
+        "hun": "이를"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -5791,7 +5791,7 @@
     "korean_eumhun": [
       {
         "eum": "층",
-        "hun": "층[層階]"
+        "hun": "층"
       }
     ]
   },
@@ -5851,7 +5851,7 @@
     "korean_eumhun": [
       {
         "eum": "암",
-        "hun": "바위[巖]"
+        "hun": "바위"
       }
     ]
   },
@@ -5861,7 +5861,7 @@
     "korean_eumhun": [
       {
         "eum": "갑",
-        "hun": "곶(串)"
+        "hun": "곶"
       }
     ]
   },
@@ -5871,7 +5871,7 @@
     "korean_eumhun": [
       {
         "eum": "악",
-        "hun": "큰산[岳]"
+        "hun": "큰산"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -6003,7 +6003,7 @@
     "korean_eumhun": [
       {
         "eum": "순",
-        "hun": "돌[廻]"
+        "hun": "돌"
       },
       {
         "eum": "순",
@@ -6431,7 +6431,7 @@
     "korean_eumhun": [
       {
         "eum": "부",
-        "hun": "마을[官廳]"
+        "hun": "마을"
       }
     ]
   },
@@ -6970,7 +6970,7 @@
     "korean_eumhun": [
       {
         "eum": "순",
-        "hun": "돌[環]"
+        "hun": "돌"
       }
     ]
   },
@@ -7283,7 +7283,7 @@
     "korean_eumhun": [
       {
         "eum": "한",
-        "hun": "한[怨]"
+        "hun": "한"
       }
     ]
   },
@@ -7809,7 +7809,7 @@
     "korean_eumhun": [
       {
         "eum": "현",
-        "hun": "달[繫]"
+        "hun": "달"
       }
     ]
   },
@@ -7881,7 +7881,7 @@
     "korean_eumhun": [
       {
         "eum": "대",
-        "hun": "일[首荷]"
+        "hun": "일"
       }
     ]
   },
@@ -7891,7 +7891,7 @@
     "korean_eumhun": [
       {
         "eum": "호",
-        "hun": null
+        "hun": "집"
       }
     ]
   },
@@ -7901,7 +7901,7 @@
     "korean_eumhun": [
       {
         "eum": "태",
-        "hun": null
+        "hun": "수레 옆문"
       }
     ]
   },
@@ -8138,7 +8138,7 @@
     "korean_eumhun": [
       {
         "eum": "저",
-        "hun": "막을[抗]"
+        "hun": "막을"
       }
     ]
   },
@@ -8332,7 +8332,7 @@
     "korean_eumhun": [
       {
         "eum": "찰",
-        "hun": null
+        "hun": "짓누를"
       }
     ]
   },
@@ -8448,7 +8448,7 @@
     "korean_eumhun": [
       {
         "eum": "애",
-        "hun": null
+        "hun": "밀칠"
       }
     ]
   },
@@ -8458,7 +8458,7 @@
     "korean_eumhun": [
       {
         "eum": "삽",
-        "hun": null
+        "hun": "꽂을"
       }
     ]
   },
@@ -8478,7 +8478,7 @@
     "korean_eumhun": [
       {
         "eum": "척",
-        "hun": null
+        "hun": "칠"
       }
     ]
   },
@@ -8543,7 +8543,7 @@
     "korean_eumhun": [
       {
         "eum": "소",
-        "hun": "쓸[掃除]"
+        "hun": "쓸"
       }
     ]
   },
@@ -8593,7 +8593,7 @@
     "korean_eumhun": [
       {
         "eum": "괘",
-        "hun": "걸[懸]"
+        "hun": "걸"
       }
     ]
   },
@@ -8653,7 +8653,7 @@
     "korean_eumhun": [
       {
         "eum": "조",
-        "hun": "둘[置]"
+        "hun": "둘"
       }
     ]
   },
@@ -8663,11 +8663,11 @@
     "korean_eumhun": [
       {
         "eum": "게",
-        "hun": "높이들[擧]"
+        "hun": "높이들"
       },
       {
         "eum": "게",
-        "hun": "걸[掛]"
+        "hun": "걸"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -8779,7 +8779,7 @@
     "korean_eumhun": [
       {
         "eum": "탑",
-        "hun": "탈[乘]"
+        "hun": "탈"
       }
     ]
   },
@@ -8824,7 +8824,7 @@
     "korean_eumhun": [
       {
         "eum": "적",
-        "hun": "딸[手收]"
+        "hun": "딸"
       }
     ]
   },
@@ -8854,7 +8854,7 @@
     "korean_eumhun": [
       {
         "eum": "격",
-        "hun": "칠[打]"
+        "hun": "칠"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -8889,7 +8889,7 @@
     "korean_eumhun": [
       {
         "eum": "박",
-        "hun": "칠[擊]"
+        "hun": "칠"
       }
     ]
   },
@@ -8969,7 +8969,7 @@
     "korean_eumhun": [
       {
         "eum": "정",
-        "hun": "정사(政事)"
+        "hun": "정사"
       }
     ]
   },
@@ -8979,7 +8979,7 @@
     "korean_eumhun": [
       {
         "eum": "공",
-        "hun": "칠[擊]"
+        "hun": "칠"
       }
     ]
   },
@@ -9029,7 +9029,7 @@
     "korean_eumhun": [
       {
         "eum": "교",
-        "hun": null
+        "hun": "가르칠"
       }
     ]
   },
@@ -9200,11 +9200,11 @@
     "korean_eumhun": [
       {
         "eum": "근",
-        "hun": "근[무게단위]"
+        "hun": "근"
       },
       {
         "eum": "근",
-        "hun": "날[刃]"
+        "hun": "날"
       }
     ]
   },
@@ -9245,7 +9245,7 @@
     "korean_eumhun": [
       {
         "eum": "방",
-        "hun": "모[棱]"
+        "hun": "모"
       }
     ]
   },
@@ -9275,7 +9275,7 @@
     "korean_eumhun": [
       {
         "eum": "선",
-        "hun": "돌[廻]"
+        "hun": "돌"
       }
     ]
   },
@@ -9305,7 +9305,7 @@
     "korean_eumhun": [
       {
         "eum": "기",
-        "hun": null
+        "hun": "이미"
       }
     ]
   },
@@ -9430,7 +9430,7 @@
     "korean_eumhun": [
       {
         "eum": "석",
-        "hun": "예[古]"
+        "hun": "예"
       }
     ]
   },
@@ -9500,7 +9500,7 @@
     "korean_eumhun": [
       {
         "eum": "시",
-        "hun": "이[斯]"
+        "hun": "이"
       },
       {
         "eum": "시",
@@ -9930,7 +9930,7 @@
     "korean_eumhun": [
       {
         "eum": "박",
-        "hun": "성(姓)"
+        "hun": "성"
       }
     ]
   },
@@ -10122,7 +10122,7 @@
     "korean_eumhun": [
       {
         "eum": "화",
-        "hun": null
+        "hun": "벚나무"
       }
     ]
   },
@@ -10253,7 +10253,7 @@
     "korean_eumhun": [
       {
         "eum": "회",
-        "hun": null
+        "hun": "상수리나무"
       }
     ]
   },
@@ -10614,7 +10614,7 @@
     "korean_eumhun": [
       {
         "eum": "악",
-        "hun": null
+        "hun": "노래"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -10625,7 +10625,7 @@
     "korean_eumhun": [
       {
         "eum": "개",
-        "hun": null
+        "hun": "대개"
       }
     ]
   },
@@ -10898,7 +10898,7 @@
     "korean_eumhun": [
       {
         "eum": "세",
-        "hun": null
+        "hun": "해"
       }
     ]
   },
@@ -11019,7 +11019,7 @@
     "korean_eumhun": [
       {
         "eum": "훼",
-        "hun": null
+        "hun": "헐"
       }
     ]
   },
@@ -11084,7 +11084,7 @@
       },
       {
         "eum": "씨",
-        "hun": "성씨(姓氏)"
+        "hun": "성씨"
       }
     ]
   },
@@ -11165,7 +11165,7 @@
     "korean_eumhun": [
       {
         "eum": "구",
-        "hun": "구할[索]"
+        "hun": "구할"
       }
     ]
   },
@@ -11225,7 +11225,7 @@
     "korean_eumhun": [
       {
         "eum": "태",
-        "hun": "일[淘]"
+        "hun": "일"
       }
     ]
   },
@@ -11269,7 +11269,7 @@
       },
       {
         "eum": "심",
-        "hun": "성(姓)"
+        "hun": "성"
       }
     ]
   },
@@ -11279,7 +11279,7 @@
     "korean_eumhun": [
       {
         "eum": "충",
-        "hun": "화(和)할"
+        "hun": "화할"
       }
     ]
   },
@@ -11423,7 +11423,7 @@
     "korean_eumhun": [
       {
         "eum": "비",
-        "hun": null
+        "hun": "물 졸졸 흐를"
       }
     ]
   },
@@ -11630,7 +11630,7 @@
     "korean_eumhun": [
       {
         "eum": "포",
-        "hun": "개[水邊]"
+        "hun": "개"
       }
     ]
   },
@@ -11801,7 +11801,7 @@
     "korean_eumhun": [
       {
         "eum": "청",
-        "hun": null
+        "hun": "맑을"
       }
     ]
   },
@@ -11822,7 +11822,7 @@
     "korean_eumhun": [
       {
         "eum": "섭",
-        "hun": null
+        "hun": "건널"
       }
     ]
   },
@@ -11936,7 +11936,7 @@
     "korean_eumhun": [
       {
         "eum": "용",
-        "hun": "물솟을[涌]"
+        "hun": "물솟을"
       }
     ]
   },
@@ -12053,7 +12053,7 @@
     "korean_eumhun": [
       {
         "eum": "자",
-        "hun": "불을[益]"
+        "hun": "불을"
       }
     ]
   },
@@ -12477,7 +12477,7 @@
     "korean_eumhun": [
       {
         "eum": "초",
-        "hun": "탈[燥]"
+        "hun": "탈"
       }
     ]
   },
@@ -12708,7 +12708,7 @@
     "korean_eumhun": [
       {
         "eum": "목",
-        "hun": "칠[養]"
+        "hun": "칠"
       }
     ]
   },
@@ -12902,7 +12902,7 @@
     "korean_eumhun": [
       {
         "eum": "옥",
-        "hun": "옥[囚舍]"
+        "hun": "옥"
       }
     ]
   },
@@ -12963,7 +12963,7 @@
     "korean_eumhun": [
       {
         "eum": "솔",
-        "hun": null
+        "hun": "거느릴"
       }
     ]
   },
@@ -13093,7 +13093,7 @@
     "korean_eumhun": [
       {
         "eum": "새",
-        "hun": "옥새(玉璽)"
+        "hun": "옥새"
       }
     ]
   },
@@ -13204,7 +13204,7 @@
     "korean_eumhun": [
       {
         "eum": "신",
-        "hun": "납[猿]"
+        "hun": "납"
       }
     ]
   },
@@ -13227,7 +13227,7 @@
         "hun": "그림"
       },
       {
-        "eum": "획(劃)",
+        "eum": "획",
         "hun": "그을"
       }
     ],
@@ -13357,7 +13357,7 @@
     "korean_eumhun": [
       {
         "eum": "기",
-        "hun": "경기(京畿)"
+        "hun": "경기"
       }
     ]
   },
@@ -13591,7 +13591,7 @@
     "korean_eumhun": [
       {
         "eum": "개",
-        "hun": "다[總]"
+        "hun": "다"
       }
     ]
   },
@@ -13992,7 +13992,7 @@
     "korean_eumhun": [
       {
         "eum": "연",
-        "hun": null
+        "hun": "갈"
       }
     ]
   },
@@ -14002,7 +14002,7 @@
     "korean_eumhun": [
       {
         "eum": "쇄",
-        "hun": null
+        "hun": "부술"
       }
     ]
   },
@@ -14173,7 +14173,7 @@
     "korean_eumhun": [
       {
         "eum": "지",
-        "hun": "복(福)"
+        "hun": "복"
       }
     ]
   },
@@ -14294,7 +14294,7 @@
     "korean_eumhun": [
       {
         "eum": "사",
-        "hun": "사사(私事)"
+        "hun": "사사"
       }
     ]
   },
@@ -14390,7 +14390,7 @@
       },
       {
         "eum": "정",
-        "hun": "길[道]"
+        "hun": "길"
       }
     ]
   },
@@ -14486,7 +14486,7 @@
     "korean_eumhun": [
       {
         "eum": "수",
-        "hun": null
+        "hun": "이삭"
       }
     ]
   },
@@ -14773,7 +14773,7 @@
     "korean_eumhun": [
       {
         "eum": "통",
-        "hun": "통(筒)"
+        "hun": "통"
       }
     ]
   },
@@ -15188,7 +15188,7 @@
       },
       {
         "eum": "삭",
-        "hun": "노[새끼줄]"
+        "hun": "노"
       }
     ]
   },
@@ -15212,7 +15212,7 @@
       },
       {
         "eum": "소",
-        "hun": "흴[白]"
+        "hun": "흴"
       }
     ]
   },
@@ -15256,7 +15256,7 @@
     "korean_eumhun": [
       {
         "eum": "신",
-        "hun": "띠[帶]"
+        "hun": "띠"
       }
     ]
   },
@@ -15492,7 +15492,7 @@
     "korean_eumhun": [
       {
         "eum": "총",
-        "hun": "다[皆]"
+        "hun": "다"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -15749,7 +15749,7 @@
     "korean_eumhun": [
       {
         "eum": "치",
-        "hun": "둘[措]"
+        "hun": "둘"
       }
     ]
   },
@@ -15769,7 +15769,7 @@
     "korean_eumhun": [
       {
         "eum": "서",
-        "hun": "마을[官廳]"
+        "hun": "마을"
       }
     ]
   },
@@ -15974,7 +15974,7 @@
     "korean_eumhun": [
       {
         "eum": "경",
-        "hun": "밭갈[犁田]"
+        "hun": "밭갈"
       }
     ]
   },
@@ -16055,7 +16055,7 @@
     "korean_eumhun": [
       {
         "eum": "기",
-        "hun": "살[膚肉]"
+        "hun": "살"
       }
     ]
   },
@@ -16065,7 +16065,7 @@
     "korean_eumhun": [
       {
         "eum": "주",
-        "hun": null
+        "hun": "팔꿈치"
       }
     ]
   },
@@ -16274,7 +16274,7 @@
     "korean_eumhun": [
       {
         "eum": "협",
-        "hun": "갈비[脅]"
+        "hun": "갈비"
       }
     ]
   },
@@ -16579,7 +16579,7 @@
     "korean_eumhun": [
       {
         "eum": "흥",
-        "hun": "일[盛]"
+        "hun": "일"
       }
     ]
   },
@@ -16599,7 +16599,7 @@
     "korean_eumhun": [
       {
         "eum": "사",
-        "hun": null
+        "hun": "집"
       }
     ]
   },
@@ -16609,7 +16609,7 @@
     "korean_eumhun": [
       {
         "eum": "포",
-        "hun": null
+        "hun": "펼"
       }
     ]
   },
@@ -16732,7 +16732,7 @@
     "korean_hanja": "艷",
     "korean_eumhun": [
       {
-        "eum": "염[艶]",
+        "eum": "염",
         "hun": "고울"
       }
     ],
@@ -16849,7 +16849,7 @@
     "korean_eumhun": [
       {
         "eum": "고",
-        "hun": "쓸[味覺]"
+        "hun": "쓸"
       }
     ]
   },
@@ -17606,7 +17606,7 @@
     "korean_eumhun": [
       {
         "eum": "거",
-        "hun": null
+        "hun": "자락"
       }
     ]
   },
@@ -18049,7 +18049,7 @@
     "korean_eumhun": [
       {
         "eum": "예",
-        "hun": "이를[至]"
+        "hun": "이를"
       }
     ]
   },
@@ -18119,11 +18119,11 @@
     "korean_eumhun": [
       {
         "eum": "해",
-        "hun": "갖출[備]"
+        "hun": "갖출"
       },
       {
         "eum": "해",
-        "hun": "마땅[當]"
+        "hun": "마땅"
       }
     ]
   },
@@ -18168,7 +18168,7 @@
     "korean_eumhun": [
       {
         "eum": "인",
-        "hun": "알[知]"
+        "hun": "알"
       }
     ]
   },
@@ -18242,7 +18242,7 @@
     "korean_eumhun": [
       {
         "eum": "설",
-        "hun": null
+        "hun": "말씀"
       }
     ]
   },
@@ -18624,7 +18624,7 @@
     "korean_eumhun": [
       {
         "eum": "부",
-        "hun": "질[荷]"
+        "hun": "질"
       }
     ]
   },
@@ -18684,7 +18684,7 @@
     "korean_eumhun": [
       {
         "eum": "판",
-        "hun": "팔[賣]"
+        "hun": "팔"
       }
     ]
   },
@@ -18963,7 +18963,7 @@
     "korean_eumhun": [
       {
         "eum": "증",
-        "hun": "줄[送]"
+        "hun": "줄"
       }
     ]
   },
@@ -19003,11 +19003,11 @@
     "korean_eumhun": [
       {
         "eum": "부",
-        "hun": "다다를[趨而至]"
+        "hun": "다다를"
       },
       {
         "eum": "부",
-        "hun": "갈[趨]"
+        "hun": "갈"
       }
     ]
   },
@@ -19067,7 +19067,7 @@
     "korean_eumhun": [
       {
         "eum": "거",
-        "hun": "상거(相距)할"
+        "hun": "상거할"
       }
     ]
   },
@@ -19179,7 +19179,7 @@
     "korean_eumhun": [
       {
         "eum": "차",
-        "hun": null
+        "hun": "수레"
       }
     ]
   },
@@ -19386,7 +19386,7 @@
     "korean_eumhun": [
       {
         "eum": "변",
-        "hun": "가[側]"
+        "hun": "가"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
@@ -19397,7 +19397,7 @@
     "korean_eumhun": [
       {
         "eum": "입",
-        "hun": null
+        "hun": "혼잡할"
       }
     ]
   },
@@ -19572,7 +19572,7 @@
     "korean_eumhun": [
       {
         "eum": "도",
-        "hun": "길[行中]"
+        "hun": "길"
       }
     ]
   },
@@ -19582,7 +19582,7 @@
     "korean_eumhun": [
       {
         "eum": "서",
-        "hun": "갈[往]"
+        "hun": "갈"
       }
     ]
   },
@@ -19947,7 +19947,7 @@
     "korean_eumhun": [
       {
         "eum": "교",
-        "hun": "들[野]"
+        "hun": "들"
       }
     ]
   },
@@ -19957,7 +19957,7 @@
     "korean_eumhun": [
       {
         "eum": "낭",
-        "hun": null
+        "hun": "사내"
       }
     ]
   },
@@ -20145,7 +20145,7 @@
     "korean_eumhun": [
       {
         "eum": "산",
-        "hun": "실[味覺]"
+        "hun": "실"
       }
     ]
   },
@@ -20237,7 +20237,7 @@
     "korean_eumhun": [
       {
         "eum": "김",
-        "hun": null
+        "hun": "성"
       }
     ]
   },
@@ -20247,7 +20247,7 @@
     "korean_eumhun": [
       {
         "eum": "야",
-        "hun": "들[坪]"
+        "hun": "들"
       }
     ]
   },
@@ -20257,7 +20257,7 @@
     "korean_eumhun": [
       {
         "eum": "부",
-        "hun": "가마[鬴]"
+        "hun": "가마"
       }
     ]
   },
@@ -20404,7 +20404,7 @@
     "korean_eumhun": [
       {
         "eum": "예",
-        "hun": null
+        "hun": "날카로울"
       }
     ]
   },
@@ -20687,7 +20687,7 @@
     "korean_eumhun": [
       {
         "eum": "열",
-        "hun": null
+        "hun": "셀"
       }
     ]
   },
@@ -21003,7 +21003,7 @@
       },
       {
         "eum": "제",
-        "hun": "가[邊]"
+        "hun": "가"
       }
     ]
   },
@@ -21199,7 +21199,7 @@
       },
       {
         "eum": "령",
-        "hun": "영[數字]"
+        "hun": "영"
       }
     ]
   },
@@ -21284,7 +21284,7 @@
     "korean_eumhun": [
       {
         "eum": "청",
-        "hun": null
+        "hun": "푸를"
       }
     ]
   },
@@ -21335,7 +21335,7 @@
     "korean_eumhun": [
       {
         "eum": "화",
-        "hun": "신[履, 鞋]"
+        "hun": "신"
       }
     ]
   },
@@ -21673,7 +21673,7 @@
     "korean_eumhun": [
       {
         "eum": "음",
-        "hun": null
+        "hun": "마실"
       }
     ]
   },
@@ -21713,7 +21713,7 @@
     "korean_eumhun": [
       {
         "eum": "병",
-        "hun": null
+        "hun": "떡"
       }
     ]
   },
@@ -21793,7 +21793,7 @@
     "korean_eumhun": [
       {
         "eum": "태",
-        "hun": null
+        "hun": "실을"
       }
     ]
   },
@@ -22115,7 +22115,7 @@
     "korean_eumhun": [
       {
         "eum": "면",
-        "hun": "국수[麪]"
+        "hun": "국수"
       }
     ],
     "mapping_source": "shinjitai_to_kyujitai_manual"
