@@ -480,7 +480,7 @@
                     <span id="k-title" style="font-weight:800; font-size:1.2rem; color:var(--text-main);"></span>
                     
                     <div class="source-group">
-                        <a href="https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json" target="_blank" class="source-badge" aria-label="한국식 한자 음훈 데이터 출처">
+                        <a href="https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json" target="_blank" class="source-badge" aria-label="한국 한자 음훈 데이터 출처">
                             Korean Hanja JSON
                         </a>
                         <a href="https://kanjiapi.dev/" target="_blank" class="source-badge reading-source" aria-label="KanjiAPI 공식 사이트">Loading...</a>
@@ -548,8 +548,8 @@
     <div id="kanjiGeneratorPool"></div>
 
     <script>
-        const KANJI_TEST = /[\u4E00-\u9FFF]/; 
-        const KANJI_GLOBAL = /[\u4E00-\u9FFF]/g;
+        const KANJI_TEST = /[\p{Script=Han}]/u; 
+        const KANJI_GLOBAL = /[\p{Script=Han}]/gu;
 
         const IDB = {
             dbName: 'jlpt_kanji_svg_v1',
@@ -617,7 +617,7 @@
         const QuizApp = (function() {
             const STORAGE_KEY = 'jlpt_engine_data_master';
             const STATE_KEY = 'jlpt_engine_state_master';
-            const KOR_DATA_KEY = 'jlpt_kanji_kor_v2';
+            const KOR_DATA_KEY = 'jlpt_kanji_kor_v3';
             const KOR_DATA_URL = 'https://muns5965.github.io/jlpt_test/data/joyo_kanji_2136_ko_only.items.json';
             let _lastFocusedElement = null; 
             
@@ -694,20 +694,26 @@
 
                     const baseKanji = item.kanji;
                     const koreanHanja = item.korean_hanja || baseKanji;
-                    const hanjaPart = koreanHanja && koreanHanja !== baseKanji
-                        ? `${baseKanji} / ${koreanHanja}`
-                        : baseKanji;
 
                     const eumhunPart = (item.korean_eumhun || [])
                         .map(x => {
                             const hun = (x.hun || '').trim();
                             const eum = (x.eum || '').trim();
-                            return `${hun} ${eum}`.trim();
+                            return hun ? `${hun} ${eum}`.trim() : eum;
                         })
                         .filter(Boolean)
                         .join(', ');
 
-                    return eumhunPart ? `${hanjaPart} · ${eumhunPart}` : hanjaPart;
+                    const meaningPart = eumhunPart || '-';
+
+                    // 상단 제목에 일본식 한자가 이미 표시되므로,
+                    // 자형이 다른 경우에만 뜻 뒤에 한국 표기를 보조 표기한다.
+                    const variantPart =
+                        koreanHanja && koreanHanja !== baseKanji
+                            ? ` (한국 표기: ${koreanHanja})`
+                            : '';
+
+                    return `${meaningPart}${variantPart}`;
                 },
 
                 async loadFromNetwork() {
@@ -1231,8 +1237,7 @@
                         
                         const fragment = document.createDocumentFragment();
                         const text = node.textContent;
-                        for(let i=0; i<text.length; i++) {
-                            const char = text[i];
+                        for (const char of text) {
                             if(KANJI_TEST.test(char)) {
                                 const span = document.createElement('span');
                                 span.className = 'kanji-clickable';
