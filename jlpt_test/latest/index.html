@@ -672,7 +672,7 @@
                     const item = this._koreanMap.get(char);
                     if (!item) return '-';
 
-                    // 예전 localStorage 캐시가 남아 있는 경우 방어
+                    // 구버전 localStorage 캐시가 문자열인 경우도 표시 가능하게 유지
                     if (typeof item === 'string') return item;
 
                     return this.formatKoreanItem(item);
@@ -1122,9 +1122,42 @@
                         grid.appendChild(btn);
                     });
                 },
+                renderExampleItem: function(e) {
+                    if (typeof e === 'string') {
+                        return `<li>${DOMPurify.sanitize(e)}</li>`;
+                    }
+
+                    if (e && typeof e === 'object') {
+                        const jp = DOMPurify.sanitize(e.jp || '');
+                        const kr = DOMPurify.sanitize(e.kr || '');
+
+                        if (jp && kr) {
+                            return `
+                                <li>
+                                    <div>${jp}</div>
+                                    <div style="color:var(--text-sub); margin-top:4px;">${kr}</div>
+                                </li>
+                            `;
+                        }
+
+                        if (jp || kr) {
+                            return `<li>${DOMPurify.sanitize(jp || kr)}</li>`;
+                        }
+                    }
+
+                    return '';
+                },
+
                 prepareExplanation: function(q, order) {
                     document.getElementById('transText').innerText = q.translation || '-';
-                    document.getElementById('logicText').innerHTML = DOMPurify.sanitize(q.explanation?.correct_logic || '-');
+
+                    const summaryText = q.explanation?.summary || '';
+                    const correctLogicText = q.explanation?.correct_logic || '-';
+                    document.getElementById('logicText').innerHTML = DOMPurify.sanitize(
+                        summaryText
+                            ? `<div style="margin-bottom:8px; color:var(--text-explain);">${summaryText}</div><div>${correctLogicText}</div>`
+                            : correctLogicText
+                    );
                     const dists = q.explanation?.wrong_logics || [];
                     let distHtml = "";
                     if(dists.length) {
@@ -1285,7 +1318,21 @@
                                 span.setAttribute('role', 'button');
                                 span.setAttribute('aria-label', `한자 ${char} 상세 정보 보기`);
                                 
-                                span.addEventListener('click', (e) => {
+                                let pointerStart = null;
+                                span.addEventListener('pointerdown', (e) => {
+                                    pointerStart = { x: e.clientX, y: e.clientY, t: Date.now() };
+                                });
+                                span.addEventListener('pointerup', (e) => {
+                                    if (!pointerStart) return;
+
+                                    const dx = Math.abs(e.clientX - pointerStart.x);
+                                    const dy = Math.abs(e.clientY - pointerStart.y);
+                                    const selectedText = window.getSelection?.().toString() || '';
+                                    pointerStart = null;
+
+                                    // 드래그 선택 중이면 필순 모달을 열지 않는다.
+                                    if (dx > 4 || dy > 4 || selectedText.length > 0) return;
+
                                     _lastFocusedElement = e.currentTarget;
                                     this.openKanji(char);
                                 });
