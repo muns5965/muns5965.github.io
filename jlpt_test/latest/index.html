@@ -1175,11 +1175,13 @@
                     wrongContent.innerHTML = distHtml;
 
                     const exs = q.explanation?.examples || [];
-                    const exHtml = exs.length ? exs.map(e=>`<li style="margin-bottom:6px;">${DOMPurify.sanitize(e)}</li>`).join('') : "<div style='text-align:center;'>예문이 없습니다.</div>";
-                    
+                    const exHtml = exs.length
+                        ? exs.map(e => this.renderExampleItem(e)).filter(Boolean).join('')
+                        : "<div style='text-align:center;'>예문이 없습니다.</div>";
+
                     const exContent = document.getElementById('exContent');
-                    exContent.innerHTML = exHtml;
-                    
+                    exContent.innerHTML = exHtml || "<div style='text-align:center;'>예문이 없습니다.</div>";
+
                     const logicText = document.getElementById('logicText');
 
                     this.refreshKanji(wrongContent);
