@@ -1124,6 +1124,19 @@
                 },
                 renderExampleItem: function(e) {
                     if (typeof e === 'string') {
+                        const parts = e.split(/\s+—\s+/);
+                        if (parts.length >= 2) {
+                            const jp = DOMPurify.sanitize(parts[0].trim());
+                            const kr = DOMPurify.sanitize(parts.slice(1).join(' — ').trim());
+
+                            return `
+                                <li>
+                                    <div>${jp}</div>
+                                    <div style="color:var(--text-sub); margin-top:4px;">${kr}</div>
+                                </li>
+                            `;
+                        }
+
                         return `<li>${DOMPurify.sanitize(e)}</li>`;
                     }
 
